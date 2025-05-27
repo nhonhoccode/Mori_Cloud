@@ -1,5 +1,5 @@
 services:
-# Test trường hợp chạy local mở comment để chạy docker 
+
   mori_search:
     build:
       context: .
@@ -7,11 +7,14 @@ services:
     container_name: mori_search
     depends_on:
       - mori_db
-    # restart: always
     ports:
       - "8000:8000"
     volumes:
       - ./:/mori_super_search
+    networks:
+      - tunnel-network  # Thêm vào đây
+    environment:
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info
 
   mori_db:
     image: postgres:17.0
@@ -19,6 +22,7 @@ services:
     env_file:
       - .env
     volumes:
+      - db_mori:/var/lib/postgresql/data
       - ./db_mori/schema/mori.sql:/docker-entrypoint-initdb.d/mori.sql:ro
     restart: unless-stopped
     ports:
@@ -28,7 +32,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-# Test trường hợp chạy local mở comment để chạy docker 
+    networks:
+      - tunnel-network  # Thêm vào đây
+    environment:
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info
+
+
   trash_cron:
     build:
       context: .
@@ -40,9 +49,26 @@ services:
       sh -c "while true; do python manage.py moritrashauto && sleep 86400; done"
     volumes:
       - ./:/mori_super_search
+    networks:
+      - tunnel-network  # Thêm vào đây
 
-  
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token eyJhIjoiNWVhNTM5NjYwODdmNjcwMTVmNjYyMTkwZjgyMDE4NDIiLCJ0IjoiMjJiYTRkYTctNDYxMy00MDhkLTg1Y2UtZGY4MjZiYzU4MGRmIiwicyI6Ik5EVm1ZVEJpWkRJdFpHVmlZaTAwTkRNNUxUazROemN0TW1ZeFptRXpOelU1TXpZeSJ9
+    environment:
+      - TUNNEL_URL=http://mori_search:8000
+    networks:
+      - tunnel-network
+    restart: unless-stopped
+    depends_on:
+      - mori_search
 
 volumes:
   db_mori:
     driver: local
+
+networks:
+  tunnel-network:
+    name: tunnel-network

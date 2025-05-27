@@ -1,0 +1,9 @@
+# Cấu hình Cloudflare Tunnel
+tunnel: demo-faster-united
+credentials-file: /etc/cloudflared/credentials.json
+
+# Cấu hình ingress
+ingress:
+  - hostname: demo.faster-united.info
+    service: http://mori_search:8000
+  - service: http_status:404

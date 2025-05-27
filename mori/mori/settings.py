@@ -35,7 +35,7 @@ SECRET_KEY = "key_django"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://demo.faster-united.info/', 'demo.faster-united.info', 'localhost']
 
 # Application definition
 
