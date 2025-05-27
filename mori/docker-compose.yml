@@ -1,10 +1,10 @@
 services:
 
-  mori_search:
+  web:  # Đổi từ mori_search thành web
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: mori_search
+    container_name: web  # Đổi từ mori_search thành web
     depends_on:
       - mori_db
     ports:
@@ -12,10 +12,10 @@ services:
     volumes:
       - ./:/mori_super_search
     networks:
-      - tunnel-network  # Thêm vào đây
+      - tunnel-network
     environment:
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info
-
+     - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info,web
+     - DJANGO_CSRF_TRUSTED_ORIGINS=https://demo.faster-united.info,http://localhost:8000
   mori_db:
     image: postgres:17.0
     container_name: mori_db
@@ -28,19 +28,12 @@ services:
     ports:
       - "5435:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
       retries: 5
     networks:
-      - tunnel-network  # Thêm vào đây
-    environment:
-      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info
-
+      - tunnel-network
 
   trash_cron:
     build:
-      context: .
       dockerfile: Dockerfile
     container_name: trash_cron
     depends_on:
@@ -50,20 +43,17 @@ services:
     volumes:
       - ./:/mori_super_search
     networks:
-      - tunnel-network  # Thêm vào đây
-
+      - tunnel-network
 
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
     command: tunnel --no-autoupdate run --token eyJhIjoiNWVhNTM5NjYwODdmNjcwMTVmNjYyMTkwZjgyMDE4NDIiLCJ0IjoiMjJiYTRkYTctNDYxMy00MDhkLTg1Y2UtZGY4MjZiYzU4MGRmIiwicyI6Ik5EVm1ZVEJpWkRJdFpHVmlZaTAwTkRNNUxUazROemN0TW1ZeFptRXpOelU1TXpZeSJ9
-    environment:
-      - TUNNEL_URL=http://mori_search:8000
     networks:
       - tunnel-network
     restart: unless-stopped
     depends_on:
-      - mori_search
+      - web  # Đổi từ mori_search thành web
 
 volumes:
   db_mori:
