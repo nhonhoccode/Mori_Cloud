@@ -1,6 +1,6 @@
-# Memories-Keeping
+# Mori_Cloud
 
-**Memories-Keeping** là một nền tảng web giúp người dùng lưu giữ, quản lý và chia sẻ các khoảnh khắc đáng nhớ dưới dạng hình ảnh và văn bản. Ứng dụng tích hợp trí tuệ nhân tạo để hỗ trợ tìm kiếm ảnh thông minh, đồng thời mang đến trải nghiệm tương tác cộng đồng hiện đại và an toàn.
+**Mori_Cloud** là một nền tảng web giúp người dùng lưu giữ, quản lý và chia sẻ các khoảnh khắc đáng nhớ dưới dạng hình ảnh và văn bản. Ứng dụng tích hợp trí tuệ nhân tạo để hỗ trợ tìm kiếm ảnh thông minh, đồng thời mang đến trải nghiệm tương tác cộng đồng hiện đại và an toàn.
 
 ---
 ## Mô tả đề tài
@@ -27,6 +27,9 @@ Lý do chọn đề tài xuất phát từ thực tiễn rằng hầu hết các
 
 * **Trần Xuân Diện** – MSSV: 22650601
 * **Nguyễn Đăng Tuấn Huy** – MSSV: 22658341
+* **Võ Trọng Nhơn** – MSSV: 22658441    
+* **Đỗ Tấn Đạt** – MSSV: 22648601
+* **Trần Phú Thọ** – MSSV: 22653431
 
 ---
 
@@ -43,8 +46,8 @@ Lý do chọn đề tài xuất phát từ thực tiễn rằng hầu hết các
 1. **Clone repository**
 
 ```bash
-git clone https://github.com/iuh-application-development/Memories-Keeping.git
-cd Memories-Keeping/mori
+git clone https://github.com/xndien2004/Mori_Cloud.git
+cd Mori_Cloud/mori
 ```
 
 2. **Tạo và kích hoạt môi trường ảo**
