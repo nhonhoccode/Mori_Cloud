@@ -1,0 +1,675 @@
+{% extends '../base/index.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
+<section class="bg-white admin-component">
+    <div class="admin-container">
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Header -->
+            <div class="admin-header">
+                <h1>MORI Admin Dashboard</h1>
+                {% comment %} <div class="admin-user">
+                    <span>{{ user.name }}</span>
+                    <img class="avatar" src="{{ user.avatar }}" alt="User">
+                </div> {% endcomment %}
+            </div>
+
+            <!-- Horizontal Tabs -->
+            <div class="admin-tabs">
+                <div class="tab-item active" data-tab="dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span>Dashboard</span>
+                </div>
+                <div class="tab-item" data-tab="users">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Quản lý người dùng</span>
+                </div>
+                <div class="tab-item" data-tab="posts">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span>Quản lý bài đăng</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="admin-tab-content active" id="dashboard-tab">
+                <div class="stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-card-icon blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Tổng người dùng</h3>
+                            <p id="total-users">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon green">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Tổng ảnh</h3>
+                            <p id="total-photos">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon purple">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Tổng bình luận</h3>
+                            <p id="total-comments">0</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon orange">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="stats-card-content">
+                            <h3>Tổng lượt thích</h3>
+                            <p id="total-likes">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-rows">
+                    <div class="stats-box">
+                        <h3>Thống kê hôm nay</h3>
+                        <div class="stats-item">
+                            <span>Bài đăng công khai mới:</span>
+                            <span id="public-photos-today">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Lượt thích mới:</span>
+                            <span id="likes-today">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Bình luận mới:</span>
+                            <span id="comments-today">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Thông báo mới:</span>
+                            <span id="notifications-today">0</span>
+                        </div>
+                    </div>
+                    <div class="stats-box">
+                        <h3>Thống kê tổng quát</h3>
+                        <div class="stats-item">
+                            <span>Người dùng đang hoạt động:</span>
+                            <span id="active-users">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Người dùng có avatar:</span>
+                            <span id="users-with-avatar">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Bài đăng công khai:</span>
+                            <span id="public-photos">0</span>
+                        </div>
+                        <div class="stats-item">
+                            <span>Tổng thông báo:</span>
+                            <span id="total-notifications">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management Tab -->
+            <div class="admin-tab-content" id="users-tab">
+                <div class="users-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="user-search" placeholder="Tìm kiếm người dùng...">
+                        <button id="search-user-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Avatar</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                <th>Ngày tạo</th>
+                                <th>Trạng thái</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- User rows will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Posts Management Tab -->
+            <div class="admin-tab-content" id="posts-tab">
+                <div class="posts-toolbar">
+                    <div class="search-box">
+                        <input type="text" id="post-search" placeholder="Tìm kiếm bài đăng...">
+                        <button id="search-post-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="posts-container" id="posts-container">
+                    <!-- Posts will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// admin.js
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab Navigation
+    const tabItems = document.querySelectorAll('.tab-item');
+    const tabContents = document.querySelectorAll('.admin-tab-content');
+
+    tabItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Update active tab item
+            tabItems.forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Update active tab content
+            tabContents.forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Load data for the active tab
+            if (tabId === 'dashboard') {
+                loadDashboardStats();
+            } else if (tabId === 'users') {
+                loadUsers();
+            } else if (tabId === 'posts') {
+                loadPosts();
+            }
+        });
+    });
+
+    // Load dashboard stats initially
+    loadDashboardStats();
+
+    // Setup search functionality
+    document.getElementById('search-user-btn').addEventListener('click', function() {
+        const searchQuery = document.getElementById('user-search').value.toLowerCase();
+        filterUsers(searchQuery);
+    });
+
+    document.getElementById('user-search').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            const searchQuery = this.value.toLowerCase();
+            filterUsers(searchQuery);
+        }
+    });
+
+    document.getElementById('search-post-btn').addEventListener('click', function() {
+        const searchQuery = document.getElementById('post-search').value.toLowerCase();
+        filterPosts(searchQuery);
+    });
+
+    document.getElementById('post-search').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            const searchQuery = this.value.toLowerCase();
+            filterPosts(searchQuery);
+        }
+    });
+});
+
+// API URLs
+const API_BASE_URL = '';
+const STATS_URL = `${API_BASE_URL}/api/admin/count/`;
+const USERS_URL = `${API_BASE_URL}/api/admin/users/`;
+const POSTS_URL = `${API_BASE_URL}/api/admin/photouploadall/`;
+
+// API Headers
+function getHeaders() {
+    return {
+        'accept': 'application/json',
+        'Authorization': `Token ${localStorage.getItem('token')}`,
+        'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+    };
+}
+
+// Format date for display
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Load dashboard statistics
+async function loadDashboardStats() {
+    try {
+        const response = await fetch(STATS_URL, {
+            method: 'GET',
+            headers: getHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Update dashboard statistics
+        document.getElementById('total-users').textContent = data.user_count || 0;
+        document.getElementById('total-photos').textContent = data.photo_total || 0;
+        document.getElementById('total-comments').textContent = data.comment_count || 0;
+        document.getElementById('total-likes').textContent = data.photo_liked_today || 0;
+        
+        // Today's stats
+        document.getElementById('public-photos-today').textContent = data.count_public_today || 0;
+        document.getElementById('likes-today').textContent = data.photo_liked_today || 0;
+        document.getElementById('comments-today').textContent = data.comment_today || 0;
+        document.getElementById('notifications-today').textContent = data.notification_today || 0;
+        
+        // General stats
+        document.getElementById('active-users').textContent = data.active_users_count || 0;
+        document.getElementById('users-with-avatar').textContent = data.users_with_avatar || 0;
+        document.getElementById('public-photos').textContent = data.count_public || 0;
+        document.getElementById('total-notifications').textContent = data.notification_total || 0;
+        
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+        alert('Không thể tải thống kê. Vui lòng thử lại!');
+    }
+}
+
+// Load users data
+let allUsers = [];
+
+async function loadUsers() {
+    try {
+        const response = await fetch(USERS_URL, {
+            method: 'GET',
+            headers: getHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        allUsers = data;
+        
+        renderUsers(data);
+    } catch (error) {
+        console.error('Error loading users:', error);
+        alert('Không thể tải danh sách người dùng. Vui lòng thử lại!');
+    }
+}
+
+// Filter users based on search query
+function filterUsers(query) {
+    if (!query) {
+        renderUsers(allUsers);
+        return;
+    }
+    
+    const filteredUsers = allUsers.filter(user => 
+        user.name.toLowerCase().includes(query) || 
+        user.email.toLowerCase().includes(query)
+    );
+    
+    renderUsers(filteredUsers);
+}
+
+// Render users table
+function renderUsers(users) {
+    const tableBody = document.getElementById('users-table-body');
+    tableBody.innerHTML = '';
+    
+    if (users.length === 0) {
+        const noDataRow = document.createElement('tr');
+        noDataRow.innerHTML = `<td colspan="7" class="text-center">Không có dữ liệu người dùng</td>`;
+        tableBody.appendChild(noDataRow);
+        return;
+    }
+    
+    users.forEach(user => {
+        const row = document.createElement('tr');
+        
+        // Fix avatar URL
+        const avatarUrl = user.avatar.startsWith('http') ? user.avatar : `${API_BASE_URL}${user.avatar}`;
+        
+        row.innerHTML = `
+            <td>${user.id_user}</td>
+            <td><img src="${avatarUrl}" alt="${user.name}" class="user-avatar"></td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${formatDate(user.created_at)}</td>
+            <td>
+                <span class="user-status ${user.is_active ? 'status-active' : 'status-inactive'}">
+                    ${user.is_active ? 'Hoạt động' : 'Không hoạt động'}
+                </span>
+            </td>
+            <td class="user-actions">
+                {% comment %} <button class="edit-btn" onclick="editUser(${user.id_user})">Cấp quyền</button> {% endcomment %}
+                <button class="delete-btn" onclick="deleteUser(${user.id_user})">Xóa</button>
+                <button class="toggle-btn" onclick="toggleUserStatus(${user.id_user}, ${user.is_staff})">${user.is_staff ? 'Vô hiệu hóa' : 'Kích hoạt'}</button>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// User actions (these would connect to your APIs)
+function editUser(userId) {
+    alert(`Chức năng chỉnh sửa người dùng ID: ${userId} đang được phát triển`);
+}
+
+async function toggleUserStatus(userId, currentStatus) {
+    const newStatus = !currentStatus;
+    
+    console.log(`Toggling user ID: ${userId} status to ${newStatus ? 'active' : 'inactive'}`);
+    
+    try {
+        // Chuẩn bị dữ liệu để gửi lên API
+        const requestData = {
+            users: [
+                {
+                    id_user: userId,
+                    is_active: newStatus,
+                    is_staff: newStatus,
+                    is_superuser: newStatus
+                }
+            ]
+        };
+        
+        // Gọi API để cập nhật trạng thái người dùng
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/`, {
+            method: 'PUT',
+            headers: {
+                ...getHeaders(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('API response:', result);
+        
+        // Hiển thị thông báo thành công
+        alert(`Đã ${newStatus ? 'kích hoạt' : 'vô hiệu hóa'} người dùng ID: ${userId} thành công`);
+        
+        // Tải lại danh sách người dùng để cập nhật UI
+        loadUsers();
+        
+    } catch (error) {
+        console.error('Error toggling user status:', error);
+        alert(`Lỗi khi ${newStatus ? 'kích hoạt' : 'vô hiệu hóa'} người dùng: ${error.message}`);
+    }
+}
+
+async function deleteUser(userId) {
+    if (confirm(`Bạn có chắc chắn muốn xóa người dùng ID: ${userId}?`)) {
+        try {
+            // Chuẩn bị dữ liệu theo format API mới
+            const requestData = {
+                "id_users": [
+                    parseInt(userId, 10)
+                ]
+            };
+            
+            // Gọi API để xóa người dùng
+            const response = await fetch(`${API_BASE_URL}/api/admin/users/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+                },
+                body: JSON.stringify(requestData)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || "Failed to delete user.");
+            }
+            
+            // Hiển thị thông báo thành công
+            alert(`Đã xóa người dùng ID: ${userId} thành công`);
+            
+            // Tải lại danh sách người dùng để cập nhật UI
+            loadUsers();
+            
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert(`Lỗi khi xóa người dùng: ${error.message}`);
+        }
+    }
+}
+
+// Load posts data
+let allPosts = [];
+
+async function loadPosts() {
+    try {
+        const response = await fetch(POSTS_URL, {
+            method: 'GET',
+            headers: getHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        allPosts = data;
+        
+        renderPosts(data);
+    } catch (error) {
+        console.error('Error loading posts:', error);
+        alert('Không thể tải danh sách bài đăng. Vui lòng thử lại!');
+    }
+}
+
+// Filter posts based on search query
+function filterPosts(query) {
+    if (!query) {
+        renderPosts(allPosts);
+        return;
+    }
+    
+    const filteredPosts = allPosts.filter(post => 
+        (post.name && post.name.toLowerCase().includes(query)) || 
+        (post.caption && post.caption.toLowerCase().includes(query)) ||
+        (post.tags && post.tags.toLowerCase().includes(query))
+    );
+    
+    renderPosts(filteredPosts);
+}
+
+// Render posts grid
+function renderPosts(posts) {
+    const postsContainer = document.getElementById('posts-container');
+    postsContainer.innerHTML = '';
+    
+    if (posts.length === 0) {
+        postsContainer.innerHTML = '<div class="no-data">Không có bài đăng nào</div>';
+        return;
+    }
+    
+    posts.forEach(post => {
+        const postCard = document.createElement('div');
+        postCard.className = 'post-card';
+        
+        // Fix photo and avatar URLs
+        const photoUrl = post.photo.startsWith('http') ? post.photo : `${API_BASE_URL}${post.photo}`;
+        const avatarUrl = post.avatar && post.avatar.startsWith('http') ? post.avatar : `${API_BASE_URL}${post.avatar}`;
+        
+        postCard.innerHTML = `
+            <img src="${photoUrl}" alt="Photo" class="post-image">
+            <div class="post-info">
+                <div class="post-user">
+                    {% comment %} <img src="${avatarUrl}" alt="User" class="post-user-avatar"> {% endcomment %}
+                    {% comment %} <span class="post-user-name">ID: ${post.id_photo} </span> {% endcomment %}
+                    {% comment %} <span class="post-user-name"> ${post.name} </span> {% endcomment %}
+                    <span class="post-user-name"> ${post.caption}</span>
+                </div>
+                <div class="post-stats">
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                        ${post.like_count || 0}
+                    </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                        ${post.comments ? post.comments.length : 0}
+                    </span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        ${formatDate(post.created_at)}
+                    </span>
+                </div>
+                <div class="post-actions">
+                    <button class="toggle-btn" onclick="togglePostVisibility(${post.id_photo}, ${post.is_public}, ${post.album})">
+                        ${post.is_public ? 'Ẩn bài đăng' : 'Hiển thị bài đăng'}
+                    </button>
+                    {% comment %} <button class="delete-btn" onclick="deletePost(${post.id_photo})">Xóa</button> {% endcomment %}
+                </div>
+            </div>
+        `;
+        
+        postsContainer.appendChild(postCard);
+    });
+}
+
+// Post actions (these would connect to your APIs)
+async function togglePostVisibility(postId, currentVisibility, albumId) {
+    const newVisibility = !currentVisibility;
+    
+    console.log(`Toggling post ID: ${postId} visibility to ${newVisibility ? 'public' : 'private'}`);
+    
+    try {
+        // Chuẩn bị dữ liệu theo format API mới
+        const requestData = [
+            {
+                "id_photo": parseInt(postId, 10),
+                "album": albumId, // Sử dụng albumId thực tế nếu có
+                "is_public": newVisibility
+            }
+        ];
+        
+        // Gọi API để cập nhật trạng thái hiển thị của bài đăng
+        const response = await fetch(`${API_BASE_URL}/api/admin/defineimage/`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+            },
+            body: JSON.stringify(requestData)
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Failed to update photo visibility.");
+        }
+        
+        const result = await response.json();
+        console.log(`Photo ID ${postId} visibility updated successfully.`, result);
+        
+        // Hiển thị thông báo thành công
+        alert(`Đã ${newVisibility ? 'hiển thị' : 'ẩn'} bài đăng ID: ${postId} thành công`);
+        
+        // Tải lại danh sách bài đăng để cập nhật UI
+        loadPosts();
+        
+    } catch (error) {
+        console.error('Error toggling post visibility:', error);
+        alert(`Lỗi khi ${newVisibility ? 'hiển thị' : 'ẩn'} bài đăng: ${error.message}`);
+    }
+}
+
+function deletePost(postId) {
+    if (confirm(`Bạn có chắc chắn muốn xóa bài đăng ID: ${postId}?`)) {
+        alert(`Chức năng xóa bài đăng ID: ${postId} đang được phát triển`);
+        // API call would go here, then reload the posts
+        // After API call, you'd call loadPosts() to refresh the list
+    }
+}
+</script>
+
+{% endblock %}

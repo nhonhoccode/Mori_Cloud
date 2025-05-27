@@ -1,0 +1,217 @@
+  /* Bộ lọc */
+  .filter-buttons button {
+    margin-right: 8px;
+  }
+  
+  /* Dự án */
+  .project-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .project-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .project-card img {
+    width: 100%;
+    height: 140px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .project-card .card-body {
+    padding: 10px;
+  }
+  
+  .project-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .project-card small {
+    color: gray;
+  }
+  
+  /* Thư mục */
+  .folder-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .folder-card i {
+    font-size: 50px;
+    color: gray;
+  }
+  
+  /* Tab menu */
+  .tab-menu {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  .tab-menu a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    padding: 10px 15px;
+  }
+  
+  .tab-menu a.active {
+    border-bottom: 3px solid blue;
+  }
+
+
+  .top-bar-manage-img  img {
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .design-section {
+    margin-top: 30px;
+  }
+  
+  .item-img p{
+    color: black;
+    font-size: .6em;
+  }
+
+  .item-img a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .item-img h5{
+    /* margin-top: 0.3em; */
+    color: black;
+    font-size: 1em;
+  }
+
+  .design-folder {
+    position: relative;
+    width: 220px;         /* Điều chỉnh theo kích thước mong muốn */
+    height: 150px;        /* Điều chỉnh theo kích thước mong muốn */
+    perspective: 800px;   /* Tạo hiệu ứng 3D */
+  }
+  
+  .folder-title {
+    padding-top: 15px;
+    margin-bottom: 0;
+  }
+
+  .folder-body {
+    padding-top: 10px;
+  }
+
+  .design-folder img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+  
+/* Ảnh đầu tiên (trên cùng) */
+.design-folder img:nth-child(1) {
+  z-index: 4;
+  transform: translateZ(0px) rotate(-6deg);
+}
+
+/* Ảnh thứ hai - lùi vào trong (Z), hơi nghiêng và dịch nhẹ xuống/qua phải */
+.design-folder img:nth-child(2) {
+  z-index: 3;
+  transform: translateZ(-20px) rotate(-2deg) translate(10px, 10px);
+}
+
+/* Ảnh thứ ba */
+.design-folder img:nth-child(3) {
+  z-index: 2;
+  transform: translateZ(-40px) rotate(2deg) translate(20px, 20px);
+}
+
+/* Ảnh thứ tư (dưới cùng) */
+.design-folder img:nth-child(4) {
+  z-index: 1;
+  transform: translateZ(-60px) rotate(-1deg) translate(30px, 30px);
+}
+
+.design-folder:hover img {
+  transform: translateZ(0) rotate(0) translate(0, 0);
+  }
+
+
+.wrap-img-choose {
+  max-height: 500px;
+  overflow: auto;
+}
+
+
+
+.modal-title {
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 0.5em;
+  color: black;
+}
+
+.folderName {
+  color: rgb(165, 165, 165);
+}
+
+.card-img-select {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer; /* Cho phép click */
+  background-color: #0000001a;
+  border: none;
+}
+
+/* Ảnh thu nhỏ */
+.card-img-select img {
+  max-width: 100%;
+  height: 150px;
+  object-fit: contain;
+  padding: 10px;
+}
+
+/* Checkbox ở góc trên bên phải */
+.select-checkbox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* Khi được chọn, bo viền hoặc đổi màu ảnh */
+.card-img-select[data-select="true"] img {
+  outline: 3px solid #0d6efd; /* xanh dương bootstrap */
+  transform: scale(1.02);     /* phóng nhẹ */
+}
+
+
+.img-fluid {
+  max-width: 350px;
+  height: auto;
+}
+
+.active i{
+  color: black !important;
+}

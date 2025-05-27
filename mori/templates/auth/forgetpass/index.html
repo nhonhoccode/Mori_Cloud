@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quên mật khẩu - MORI</title>
+  <!-- Link Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-start justify-center min-h-screen text-gray-900">
+  <div class="w-full max-w-sm px-6">
+    <!-- Form Container -->
+    <div class="flex justify-center mb-6 pt-20"></div>
+    <div class="bg-white rounded-lg shadow-md p-6 border border-gray-300">
+      <h1 class="text-2xl font-semibold text-center mb-6">Quên mật khẩu</h1>
+      <p class="text-center text-sm text-gray-600 mb-4">
+        Nhập email của bạn để nhận liên kết đặt lại mật khẩu.
+      </p>
+      <!-- Form gửi yêu cầu reset password -->
+      <form id="forgotForm" class="space-y-4">
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-[12px] font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Nhập email của bạn"
+            required
+            class="mt-1 w-full px-4 py-2 bg-white text-[12px] text-gray-900 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+        </div>
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="submitButton"
+          class="w-full py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition"
+        >
+          Gửi liên kết đặt lại mật khẩu
+        </button>
+      </form>
+      <!-- Message for when email has been sent -->
+      <div id="emailSentMessage" class="hidden text-center mt-4 text-green-600 text-sm">
+        Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.
+      </div>
+      <div class="text-center mt-4">
+        <a href="/page/login" class="text-blue-600 text-sm hover:underline">Quay lại đăng nhập</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Biến để theo dõi trạng thái đã gửi email hay chưa
+    let emailSent = false;
+
+    // Disable submit button function
+    function disableSubmitButton() {
+      const submitButton = document.getElementById('submitButton');
+      submitButton.disabled = true;
+      submitButton.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+      submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+      submitButton.textContent = 'Đang gửi...';
+    }
+
+    // Show email sent message
+    function showEmailSentMessage() {
+      document.getElementById('emailSentMessage').classList.remove('hidden');
+    }
+
+    document.getElementById('forgotForm').addEventListener('submit', async (event) => {
+      event.preventDefault(); // Chặn submit form mặc định
+
+      // Kiểm tra xem đã gửi email chưa
+      if (emailSent) {
+        alert('Email đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra hộp thư của bạn.');
+        return;
+      }
+
+      // Vô hiệu hóa nút submit ngay lập tức
+      disableSubmitButton();
+
+      const email = document.getElementById('email').value.trim();
+      const payload = { email: email };
+
+      try {
+        const response = await fetch('/user/forgot/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();  // Lấy dữ liệu trả về từ API
+
+        // Kiểm tra mã trạng thái HTTP và thông báo lỗi nếu có
+        if (!response.ok) {
+          if (response.status === 400) {
+            // Lỗi Email chỉ đăng nhập bằng Gmail
+            alert('Lỗi: ' + data.error);
+          } else if (response.status === 404) {
+            // Lỗi không tồn tại email trong hệ thống
+            alert('Lỗi: ' + data.error);
+          } else {
+            // Các lỗi khác (nếu có)
+            alert('Đã có lỗi xảy ra: ' + data.error);
+          }
+          // Khôi phục trạng thái nút submit
+          const submitButton = document.getElementById('submitButton');
+          submitButton.disabled = false;
+          submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+          submitButton.classList.add('bg-purple-600', 'hover:bg-purple-700');
+          submitButton.textContent = 'Gửi liên kết đặt lại mật khẩu';
+          return;
+        }
+
+        // Nếu không có lỗi, tiếp tục như bình thường
+        console.log('Email đặt lại mật khẩu đã gửi', data);
+
+        // Đánh dấu là đã gửi email
+        emailSent = true;
+
+        // Cập nhật trạng thái nút
+        const submitButton = document.getElementById('submitButton');
+        submitButton.textContent = 'Đã gửi liên kết';
+
+        // Hiển thị thông báo đã gửi email
+        showEmailSentMessage();
+
+      } catch (error) {
+        console.error('Lỗi:', error);
+        alert('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+
+        // Khôi phục nút submit trong trường hợp lỗi
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = false;
+        submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        submitButton.classList.add('bg-purple-600', 'hover:bg-purple-700');
+        submitButton.textContent = 'Gửi liên kết đặt lại mật khẩu';
+      }
+    });
+  </script>
+</body>
+</html>

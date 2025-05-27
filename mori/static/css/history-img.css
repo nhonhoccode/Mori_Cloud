@@ -1,0 +1,151 @@
+.top-bar {
+  background: linear-gradient(172deg, #d8c1f7 5%, #d2b6f7 55%);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 16px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Bộ lọc */
+.filter-buttons button {
+  margin-right: 8px;
+}
+
+/* Dự án */
+.project-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+  transform: scale(1.05);
+}
+
+.project-card img {
+  width: 100%;
+  height: 140px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  object-fit: cover;
+}
+
+.project-card .card-body {
+  padding: 10px;
+}
+
+.project-card p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.project-card small {
+  color: gray;
+}
+
+/* Thư mục */
+.folder-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.folder-card i {
+  font-size: 50px;
+  color: gray;
+}
+
+/* Tab menu */
+.tab-menu {
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.tab-menu a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  padding: 10px 15px;
+}
+
+.tab-menu a.active {
+  border-bottom: 3px solid blue;
+}
+
+
+.top-bar-manage-img img {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.design-section {
+  margin-top: 20px;
+}
+
+.design-card {
+  display: flex;
+  align-items: center;
+  background-color: #1e1e1e;
+  color: black;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  min-height: 160px;
+}
+
+.design-card:hover {
+  background-color: #fbf6f6;
+  transform: scale(1.02);
+}
+
+/* Phần hình ảnh bên trái */
+.design-card img {
+  width: 160px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+/* Phần văn bản bên phải */
+.design-text {
+  flex-grow: 1;
+}
+
+.design-text h5 {
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.design-text p {
+  font-size: 14px;
+  color: #413e3e;
+  margin: 0;
+}
+
+/* Nút X để xóa lịch sử */
+.delete-btn {
+  background: none;
+  border: none;
+  color: black;
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.delete-btn:hover {
+  color: red;
+}

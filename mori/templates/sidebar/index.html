@@ -1,0 +1,428 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+<div class="sidebar mt-4">
+    <div class="row">
+        <div class="col-3 sidebar-router">
+            <a class="btn-hide-sidebar nav-link" id="sidebarToggle">
+                <i class="bi bi-list icon_bar"></i>
+            </a>
+            <a href="/page/home" class="nav-link">
+                <span>
+                    <svg class="noactive_icon" width="32" height="32" viewBox="0 0 32 32" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M16.766 25.5h-1.532c-2.01 0-3.41-.002-4.494-.105-1.06-.102-1.66-.29-2.108-.569a4.5 4.5 0 0 1-1.458-1.458c-.278-.449-.467-1.048-.569-2.108-.103-1.084-.105-2.485-.105-4.494 0-1.773.018-2.323.176-2.802.097-.295.232-.575.403-.834.278-.421.699-.776 2.09-1.876l3.245-2.568c.996-.788 1.659-1.31 2.208-1.662.524-.336.828-.438 1.078-.468a2.5 2.5 0 0 1 .6 0c.25.03.554.132 1.078.468.55.353 1.212.874 2.208 1.662l3.246 2.568c1.39 1.1 1.81 1.455 2.089 1.876.17.259.306.54.403.834.158.48.176 1.03.176 2.802 0 2.01-.002 3.41-.105 4.494-.102 1.06-.29 1.66-.569 2.108a4.5 4.5 0 0 1-1.458 1.458c-.449.278-1.048.467-2.108.569-1.084.103-2.484.105-4.494.105ZM5 16.766c0-1.673 0-2.51.25-3.271.14-.421.333-.822.577-1.191.442-.67 1.098-1.189 2.41-2.227l3.247-2.567c1.945-1.539 2.918-2.308 4.035-2.444a4 4 0 0 1 .962 0c1.117.136 2.09.905 4.035 2.444l3.246 2.567c1.313 1.038 1.969 1.557 2.41 2.227a5 5 0 0 1 .577 1.19c.251.762.251 1.599.251 3.272 0 3.96 0 5.94-.898 7.392a6 6 0 0 1-1.944 1.944C22.706 27 20.726 27 16.766 27h-1.532c-3.96 0-5.94 0-7.392-.898a6 6 0 0 1-1.944-1.944C5 22.706 5 20.726 5 16.766Zm9.595-1.063a2.996 2.996 0 0 1 2.81 0c.52.276.845.816.845 1.405v4.843h-4.5v-4.843c0-.589.325-1.13.845-1.405Zm3.514-1.325c-1.319-.7-2.9-.7-4.218 0a3.09 3.09 0 0 0-1.641 2.73V22.2c0 .69.56 1.25 1.25 1.25h5c.69 0 1.25-.56 1.25-1.25v-5.093a3.09 3.09 0 0 0-1.64-2.73Z">
+                        </path>
+                    </svg>
+
+                    <svg class="active_icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25 13.495C5 14.255 5 15.093 5 16.765c0 3.96 0 5.94.898 7.392a6 6 0 0 0 1.944 1.944C9.293 27 11.274 27 15.234 27h1.532c3.96 0 5.94 0 7.392-.898a6 6 0 0 0 1.944-1.944C27 22.706 27 20.726 27 16.766c0-1.673 0-2.51-.25-3.271a5 5 0 0 0-.577-1.191c-.442-.67-1.098-1.189-2.41-2.227L20.515 7.51c-1.945-1.539-2.918-2.308-4.035-2.444a4 4 0 0 0-.962 0c-1.117.136-2.09.905-4.035 2.444l-3.246 2.567c-1.313 1.038-1.969 1.557-2.41 2.227-.245.37-.439.77-.577 1.19ZM19 17.108V22.2a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-5.093c0-.866.478-1.661 1.243-2.068a3.745 3.745 0 0 1 3.514 0A2.341 2.341 0 0 1 19 17.108Z" fill="currentColor"></path></svg>
+                </span>
+                <h6>Trang chủ</h6>
+            </a>
+            <a href="/page/manage-imgs" class="nav-link">
+                <span>
+                    <svg class="noactive_icon" width="32" height="33" viewBox="0 0 32 33" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M17.041 9.447a2.062 2.062 0 0 0 1.845 1.14H23a2.5 2.5 0 0 1 2.5 2.5v.615H6.524l.005-3.006a3.5 3.5 0 0 1 3.5-3.494h4.036a3 3 0 0 1 2.683 1.658l.293.587Zm-10.52 5.755-.01 6.492a4.5 4.5 0 0 0 4.5 4.508H21a4.5 4.5 0 0 0 4.5-4.5v-6.5H6.521Zm7.544-9.5h-4.036a5 5 0 0 0-5 4.992L5.01 21.692a6 6 0 0 0 6 6.01H21a6 6 0 0 0 6-6v-8.615a4 4 0 0 0-4-4h-4.114a.563.563 0 0 1-.503-.311l-.293-.586a4.5 4.5 0 0 0-4.025-2.488Z">
+                        </path>
+                    </svg>
+                    <svg class="active_icon" width="32" height="33" viewBox="0 0 32 33" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M10.029 5.702h4.036A4.5 4.5 0 0 1 18.09 8.19l.293.586c.095.19.29.31.503.31H23a4 4 0 0 1 4 4v.616h-3.219v-.5a1 1 0 0 0-1-1H9.22a1 1 0 0 0-1 1v.5H5.024l.005-3.008a5 5 0 0 1 5-4.992Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M5.021 15.202v.016H5c-.476 0-.926.188-1.222.51a1.21 1.21 0 0 0-.297 1.143l1.812 6.711h.018a6.003 6.003 0 0 0 5.7 4.12H21a6.002 6.002 0 0 0 5.913-4.974l1.605-5.852a1.21 1.21 0 0 0-.294-1.147c-.296-.323-.747-.511-1.224-.511v-.016H5.021Zm-.002 1.363H5l.019.07v-.07Z"></path></svg>
+                </span>
+                <h6>Quản lý ảnh</h6>
+            </a>
+            <a href="/page/social" class="nav-link">
+                <span>
+                    <svg class="noactive_icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity=".8">
+                            <path
+                                d="M15.844 16.067a.233.233 0 0 0-.233.233h.005c0 .128.095.213.221.237l.036.009.048.012.013.003c.658.173 1.22.432 1.681.775a3.802 3.802 0 0 1 .434.375l.003.003c.084.086.164.175.24.269a3.84 3.84 0 0 1 .77 1.698c.007.029.012.058.017.087a.233.233 0 0 0 .233.232v-.005c.128 0 .213-.094.237-.22l.01-.036a1.93 1.93 0 0 1 .011-.049l.002-.006.001-.006c.173-.658.433-1.22.775-1.682a3.783 3.783 0 0 1 .647-.676 3.84 3.84 0 0 1 1.698-.771l.087-.017a.228.228 0 0 0 .227-.232c0-.129-.094-.214-.22-.238l-.036-.009-.049-.011-.012-.004c-.659-.172-1.22-.432-1.683-.775a3.782 3.782 0 0 1-.432-.374l-.003-.003a3.609 3.609 0 0 1-.24-.27 3.84 3.84 0 0 1-.771-1.698 5.512 5.512 0 0 1-.017-.086.233.233 0 0 0-.232-.233v.005c-.129 0-.213.095-.238.221l-.008.036a2.701 2.701 0 0 1-.012.048l-.003.012c-.173.659-.433 1.22-.775 1.682a3.783 3.783 0 0 1-.375.433l-.003.003a3.609 3.609 0 0 1-.27.24 3.84 3.84 0 0 1-1.668.766l-.03.006a4.555 4.555 0 0 1-.086.016Z"
+                                fill="#4A2E7E"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M16 3.037c-6.065 0-11 4.935-11 11v9.445c0 .563.458 1.02 1.02 1.02.234 0 .477-.09.672-.255l.005-.005a6.99 6.99 0 0 1 4.4-1.536c2.6 0 4.983 1.421 6.22 3.709a.63.63 0 0 0 .73.302c.658-.2 1.346-.3 2.043-.3 1.92 0 3.76.8 5.204 2.272.188.177.436.274.694.274.568 0 1.012-.435 1.012-.988V14.037c0-6.065-4.935-11-11-11Zm9.75 24.36c-1.594-1.433-3.575-2.23-5.66-2.23-.65 0-1.295.075-1.923.223a8.312 8.312 0 0 0-7.07-3.934c-1.76 0-3.431.538-4.847 1.557v-8.976c0-1.76.476-3.41 1.297-4.837l12.41 7.351-9.352-10.628A9.69 9.69 0 0 1 16 4.287c5.375 0 9.75 4.375 9.75 9.75v13.36Z"
+                                fill="url(#_2678149838__a)"></path>
+                        </g>
+                        <defs>
+                            <radialGradient id="_2678149838__a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                                gradientTransform="matrix(-7.875 -6.62503 6.51514 -7.74438 19 15.875)">
+                                <stop offset=".234" stop-color="#4A2E7E" stop-opacity="0"></stop>
+                                <stop offset=".712" stop-color="#4A2E7E"></stop>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                    <svg class="active_icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.992 3.063c-6.065 0-11 4.934-11 11v9.445c0 .562.458 1.02 1.02 1.02.235 0 .477-.091.672-.255l.005-.005a6.99 6.99 0 0 1 4.4-1.537c2.6 0 4.983 1.421 6.22 3.71a.63.63 0 0 0 .73.301c.658-.199 1.346-.3 2.043-.3 1.92 0 3.76.8 5.204 2.273.189.177.436.273.694.273.568 0 1.012-.434 1.012-.988V14.062c0-6.065-4.934-11-11-11Z" fill="#7630D7"></path><path d="M15.844 16.067a.233.233 0 0 0-.233.233h.005c0 .128.095.213.221.237l.036.009.048.012.013.003c.658.173 1.22.432 1.681.775a3.802 3.802 0 0 1 .434.375l.003.003c.084.086.164.175.24.269a3.84 3.84 0 0 1 .77 1.698c.007.029.012.058.017.087a.233.233 0 0 0 .233.232v-.005c.128 0 .213-.094.237-.22l.01-.036a1.93 1.93 0 0 1 .011-.049l.002-.006.001-.006c.173-.658.433-1.22.775-1.682a3.783 3.783 0 0 1 .647-.676 3.84 3.84 0 0 1 1.698-.771l.087-.017a.228.228 0 0 0 .227-.232c0-.129-.094-.214-.22-.238l-.036-.009-.049-.011-.012-.004c-.659-.172-1.22-.432-1.683-.775a3.782 3.782 0 0 1-.432-.374l-.003-.003a3.609 3.609 0 0 1-.24-.27 3.84 3.84 0 0 1-.771-1.698 5.512 5.512 0 0 1-.017-.086.233.233 0 0 0-.232-.233v.005c-.129 0-.213.095-.238.221l-.008.036a2.701 2.701 0 0 1-.012.048l-.003.012c-.173.659-.433 1.22-.775 1.682a3.783 3.783 0 0 1-.375.433l-.003.003a3.609 3.609 0 0 1-.27.24 3.84 3.84 0 0 1-1.668.766l-.03.006a4.555 4.555 0 0 1-.086.016Z" fill="#E8DDF9"></path><path d="M9.766 4.977a11.154 11.154 0 0 0-3.32 3.585l13.511 7.99L9.766 4.976Z" fill="url(#_4284012125__a)"></path><defs><linearGradient id="_4284012125__a" x1="9.495" y1="7.193" x2="19.748" y2="16.718" gradientUnits="userSpaceOnUse"><stop offset=".288" stop-color="#E8DDF9"></stop><stop offset=".766" stop-color="#E8DDF9" stop-opacity="0"></stop></linearGradient></defs></svg>
+
+                </span>
+                <h6>Cộng đồng</h6>
+            </a>
+            <a href="/page/history-imgs" class="nav-link">
+                <span>
+                    <svg class="noactive_icon" width="32" height="33" viewBox="0 0 32 33" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M15.405 19.276a3.535 3.535 0 1 1 7.07 0 3.535 3.535 0 0 1-7.07 0Zm3.535-2.035a2.035 2.035 0 1 0 0 4.07 2.035 2.035 0 0 0 0-4.07Z">
+                        </path>
+                        <path
+                            d="M10.716 19.276a2.035 2.035 0 0 1 3.249-1.633.75.75 0 0 0 .896-1.203 3.535 3.535 0 1 0-.022 5.687.75.75 0 1 0-.887-1.21 2.035 2.035 0 0 1-3.236-1.642Z">
+                        </path>
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="m6.151 12.286 7.02-5.89a5.292 5.292 0 0 1 7.456.652l.272.324a5.29 5.29 0 0 1 4.131 3.416l.449 1.231a5.289 5.289 0 0 1 2.534 4.517v5.416a5.292 5.292 0 0 1-5.292 5.292H9.305a5.292 5.292 0 0 1-5.292-5.292v-5.416c0-1.74.84-3.286 2.138-4.25Zm4.666-1.957 3.319-2.784a3.794 3.794 0 0 1 4.743-.107 5.244 5.244 0 0 1-.631.187L7.599 11.5l3.218-1.17Zm12.812.993-.008-.021a3.792 3.792 0 0 0-4.86-2.267l-6.073 2.21h10.033c.31 0 .613.027.908.078ZM9.305 12.744H22.72a3.792 3.792 0 0 1 3.792 3.792v5.416a3.792 3.792 0 0 1-3.792 3.792H9.305a3.792 3.792 0 0 1-3.792-3.792v-5.416a3.792 3.792 0 0 1 3.792-3.792Z">
+                        </path>
+                    </svg>
+                    <svg class="active_icon" width="32" height="33" viewBox="0 0 32 33" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="m9.661 9.34-3.51 2.946a5.284 5.284 0 0 0-2.138 4.25v5.416a5.292 5.292 0 0 0 5.292 5.292H22.72a5.292 5.292 0 0 0 5.292-5.292v-5.416a5.289 5.289 0 0 0-2.534-4.517l-.448-1.231a5.29 5.29 0 0 0-4.132-3.416l-.272-.324a5.292 5.292 0 0 0-7.456-.652L9.661 9.34Zm4.475-1.795-3.319 2.784L7.599 11.5l10.649-3.875a5.335 5.335 0 0 1 .63-.187 3.794 3.794 0 0 0-4.742.107ZM23.62 11.3l.008.021a5.327 5.327 0 0 0-.908-.078H12.688l6.073-2.21a3.792 3.792 0 0 1 4.86 2.267Zm-4.681 4.44a3.535 3.535 0 1 0 0 7.07 3.535 3.535 0 0 0 0-7.07Zm-2.035 3.535a2.035 2.035 0 1 1 4.07 0 2.035 2.035 0 0 1-4.07 0ZM12.75 17.24a2.035 2.035 0 1 0 1.202 3.677.75.75 0 0 1 .887 1.21 3.535 3.535 0 1 1 .022-5.687.75.75 0 1 1-.896 1.202 2.022 2.022 0 0 0-1.214-.402Z"></path></svg>
+
+                </span>
+                <h6>Lịch sử</h6>
+            </a>
+            <a href="/page/admin" class="nav-link nav-admin">
+                <span>
+                    <svg class="noactive_icon" width="32" height="32" viewBox="0 0 32 32" fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#_70268267__a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.765 18.1c-.971 0-1.759.787-1.759 1.759v3.282c0 .972.788 1.759 1.76 1.759h3.281c.972 0 1.76-.787 1.76-1.759V19.86c0-.972-.788-1.759-1.76-1.759H8.765Zm0-1.25a3.009 3.009 0 0 0-3.009 3.009v3.282a3.009 3.009 0 0 0 3.01 3.009h3.281a3.009 3.009 0 0 0 3.01-3.009V19.86a3.009 3.009 0 0 0-3.01-3.009H8.765Z"></path><path d="M17.344 21.5c0-.345.28-.625.625-.625h7.25a.625.625 0 0 1 0 1.25h-7.25a.625.625 0 0 1-.625-.625Z"></path><path d="M21.594 17.25c.345 0 .625.28.625.625v7.25a.625.625 0 0 1-1.25 0v-7.25c0-.345.28-.625.625-.625Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M8.765 7.1c-.971 0-1.759.787-1.759 1.759v3.282c0 .972.788 1.759 1.76 1.759h3.281c.972 0 1.76-.787 1.76-1.759V8.86c0-.972-.788-1.759-1.76-1.759H8.765Zm0-1.25a3.009 3.009 0 0 0-3.009 3.009v3.282a3.009 3.009 0 0 0 3.01 3.009h3.281a3.009 3.009 0 0 0 3.01-3.009V8.86a3.009 3.009 0 0 0-3.01-3.009H8.765ZM19.953 7.1c-.972 0-1.76.787-1.76 1.759v3.282c0 .972.788 1.759 1.76 1.759h3.282c.971 0 1.759-.787 1.759-1.759V8.86c0-.972-.788-1.759-1.76-1.759h-3.281Zm0-1.25a3.009 3.009 0 0 0-3.01 3.009v3.282a3.009 3.009 0 0 0 3.01 3.009h3.282a3.009 3.009 0 0 0 3.009-3.009V8.86a3.009 3.009 0 0 0-3.01-3.009h-3.281Z"></path></g><defs><clipPath id="_70268267__a"><rect width="32" height="32" rx="8"></rect></clipPath></defs>
+                    </svg>
+                
+                    <svg class="active_icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#_1244969711__a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.75 19.884a3.009 3.009 0 0 1 3.009-3.009h3.282a3.009 3.009 0 0 1 3.009 3.009v3.282a3.009 3.009 0 0 1-3.009 3.009H8.76a3.009 3.009 0 0 1-3.009-3.009v-3.282ZM5.75 8.884a3.009 3.009 0 0 1 3.009-3.009h3.282a3.009 3.009 0 0 1 3.009 3.009v3.282a3.009 3.009 0 0 1-3.009 3.009H8.76a3.009 3.009 0 0 1-3.009-3.009V8.884ZM16.938 8.884a3.009 3.009 0 0 1 3.008-3.009h3.283a3.009 3.009 0 0 1 3.009 3.009v3.282a3.009 3.009 0 0 1-3.01 3.009h-3.282a3.009 3.009 0 0 1-3.009-3.009V8.884Z"></path><path d="M17.337 21.525c0-.345.28-.625.625-.625h7.25a.625.625 0 1 1 0 1.25h-7.25a.625.625 0 0 1-.625-.625Z"></path><path d="M21.587 17.275c.346 0 .625.28.625.625v7.25a.625.625 0 1 1-1.25 0V17.9c0-.345.28-.625.625-.625Z"></path></g><defs><clipPath id="_1244969711__a"><rect width="32" height="32" rx="8"></rect></clipPath></defs></svg>
+                    </svg>
+                </span>
+                <h6>Admin</h6>
+            </a>
+        </div>
+        <div class="col-9 sidebar-option">
+            <a href="/page/home">
+                <h2>Mori</h2>
+            </a>
+
+            <div class="upload" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <button class="custom-btn">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <h7>Tải ảnh lên</h7>
+                </button>
+            </div>
+
+            <!-- Modal Upload Ảnh (Ví dụ cơ bản) -->
+            <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="uploadModalLabel">Tải ảnh lên</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="uploadForm" class="text-center">
+                                <!-- Input file cho phép chọn nhiều ảnh -->
+                                <input type="file" id="uploadFile" class="d-none" multiple accept="image/*">
+
+                                <div style="flex 1; display: flex; flex-direction: column; align-items: center;">
+                                    <img for="uploadFile" src="https://static.canva.com/web/images/2ad70535976a3d93f1f8daa4bb7f3598.png" alt="Upload" style="width: auto; height: 150px; cursor: pointer;">
+                                     <!-- Nhãn giả cho input file -->
+                                    <label for="uploadFile" class="custom-file-label">
+                                        <i class="bi bi-image me-1"></i> Chọn ảnh
+                                    </label>
+                                </div>
+
+                               
+
+                                <!-- Hiển thị tên file đã chọn -->
+                                <div id="fileNameDisplay" class="mt-2 text-muted hidden">Chưa chọn file</div>
+
+                                <!-- Khu vực preview ảnh -->
+                                <div id="previewContainer" class="d-flex flex-wrap justify-content-center mt-3 gap-2">
+                                    <!-- Ảnh sẽ được thêm vào đây bằng JavaScript -->
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-primary" onclick="uploadImages()">Tải lên</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <section class="section-history designs-section">
+                <h3 class="section-title">Lịch sử gần đây</h3>
+
+                <ul class="design-list" id="designList">
+
+                </ul>
+
+                <a href="#" class="view-all" id="viewAllBtn">Xem tất cả</a>
+            </section>
+
+
+
+            <div class="trash">
+                <a href="/page/trash">
+                    <i class="bi bi-trash mr-2"></i>
+                    <h7>Thùng rác</h7>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('uploadFile').addEventListener('change', function () {
+        const fileDisplay = document.getElementById('fileNameDisplay');
+        const previewContainer = document.getElementById('previewContainer');
+        const files = this.files;
+
+        // Hiển thị tên file
+        if (files.length === 0) {
+            fileDisplay.textContent = 'Chưa chọn file';
+            previewContainer.innerHTML = '';
+            return;
+        }
+
+        // Danh sách tên file
+        const fileNames = [];
+        for (let i = 0; i < files.length; i++) {
+            fileNames.push(files[i].name);
+        }
+        fileDisplay.textContent = fileNames.join(', ');
+
+        // Xoá nội dung cũ trước khi thêm preview
+        previewContainer.innerHTML = '';
+
+        // Tạo preview cho từng file
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            // Kiểm tra xem có đúng kiểu ảnh không
+            if (!file.type.startsWith('image/')) continue;
+
+            // Sử dụng FileReader để đọc và preview ảnh
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result; // base64 data
+                {% comment %} img.style.maxWidth = '150px'; // You can change this to adjust the size {% endcomment %}
+                img.style.maxHeight = '250px'; // You can change this to adjust the size
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function uploadImages() {
+        const files = document.getElementById('uploadFile').files;
+        if (files.length === 0) {
+            alert('Vui lòng chọn ít nhất một ảnh!');
+            return;
+        }
+    
+        let formData = new FormData();
+    
+        // Hiển thị toast đang upload và giữ reference để tắt thủ công
+        const uploadingToast = Toastify({
+            text: "Đang tải ảnh lên...",
+            duration: -1, // giữ toast cho đến khi tắt bằng tay
+            close: true,
+            gravity: "top",
+            position: 'right',
+            backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+        });
+    
+        uploadingToast.showToast();
+    
+        // Thêm ảnh vào FormData
+        for (let i = 0; i < files.length; i++) {
+            formData.append('photos', files[i]);
+        }
+    
+        fetch('/photo/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                // Ẩn toast đang upload
+                uploadingToast.hideToast();
+    
+                Toastify({
+                    text: "Tải ảnh lên thành công!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: 'right',
+                    backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+                }).showToast();
+    
+                // Đóng modal
+                const modal = document.getElementById('uploadModal');
+                const modalInstance = bootstrap.Modal.getInstance(modal);
+                modalInstance.hide();
+    
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            uploadingToast.hideToast(); // Ẩn nếu có lỗi
+            alert('Có lỗi xảy ra, vui lòng thử lại.');
+        });
+    }
+    
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPath = window.location.pathname;
+
+        document.querySelectorAll(".sidebar-router .nav-link").forEach(function (link) {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add("active");
+            }
+        });
+
+
+        fetch('/search-history/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`, // Replace with actual token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const wrapContent = document.querySelector('.section-history');
+            const historyContainer = document.getElementById('designList');
+            const defaultImageContainer = document.getElementById('default-img');
+            wrapContent.style.display = 'none';
+
+            if (data.length === 0 || data === null) {
+                defaultImageContainer.style.display = 'block';
+                wrapContent.style.display = 'none';
+                console.log("không cps data history");
+            } else {
+                wrapContent.style.display = 'block';
+
+                data.forEach(item => {
+                    const card = document.createElement('li');
+                    card.classList.add('design-item');
+                    card.setAttribute('data-type', item.search_type === 'image' ? 'find_ai' : 'find_normal');
+                    
+                    const cardHtml = `
+                        <img src="${item.liked_images[0].photo}"
+                            alt="Logo Mori" class="design-img">
+                        <span class="design-name">${item.search_query}</span>
+                    `;
+                    card.innerHTML = cardHtml;
+                    historyContainer.appendChild(card);
+                });
+
+                const designList = document.getElementById("designList");
+        const viewAllBtn = document.getElementById("viewAllBtn");
+
+        // Số lượng item muốn hiển thị mặc định
+        const maxVisible = 3;
+
+        // Lấy tất cả các item
+        const items = designList.querySelectorAll(".design-item");
+
+        // Nếu có nhiều hơn maxVisible item, ẩn phần dư
+        if (items.length > maxVisible) {
+            for (let i = maxVisible; i < items.length; i++) {
+                items[i].classList.add("hidden");
+            }
+        } else {
+            // Nếu ít item hơn maxVisible, có thể ẩn hoặc vô hiệu hóa nút "Xem tất cả"
+            viewAllBtn.style.display = "none";
+        }
+
+        // Trạng thái mở rộng/thu gọn
+        let expanded = false;
+
+        // Bắt sự kiện click vào nút "Xem tất cả"
+        viewAllBtn.addEventListener("click", function (event) {
+            event.preventDefault(); // Ngăn reload trang
+
+            if (!expanded) {
+                // Hiển thị tất cả
+                for (let i = maxVisible; i < items.length; i++) {
+                    items[i].classList.remove("hidden");
+                }
+                viewAllBtn.textContent = "Thu gọn";
+                expanded = true;
+            } else {
+                // Thu gọn lại
+                for (let i = maxVisible; i < items.length; i++) {
+                    items[i].classList.add("hidden");
+                }
+                viewAllBtn.textContent = "Xem tất cả";
+                expanded = false;
+            }
+        });
+            }
+        })
+        .catch(error => {
+            {% comment %} console.error('Error fetching history:', error); {% endcomment %}
+            {% comment %} document.getElementById('default-img')?.style?.display = 'block'; {% endcomment %}
+        });
+    });
+</script>
+
+<script>
+    // Toggle khi click
+    document.getElementById('sidebarToggle').addEventListener('click', function () {
+        const sidebar = document.querySelector('.sidebar');
+        const router = document.querySelector('.sidebar-router');
+        const option = document.querySelector('.sidebar-option');
+        const wrap = document.querySelector('.sidebar-wrap');
+        const content = document.querySelector('.content-wrap');
+
+        // Toggle class
+        sidebar.classList.toggle('active');
+        router.classList.toggle('col-3');
+        option.classList.toggle('hidden');
+        wrap.classList.toggle('hidden_sidebar');
+        content.classList.toggle('hidden_sidebar_content');
+
+        // Sau khi toggle xong thì kiểm tra trạng thái mới và lưu vào localStorage
+        const isNowActive = sidebar.classList.contains('active');
+        localStorage.setItem('sidebarActive', isNowActive ? 'true' : 'false');
+    });
+
+    // Khôi phục trạng thái khi reload
+    window.addEventListener('DOMContentLoaded', function () {
+        const isActive = localStorage.getItem('sidebarActive') === 'true';
+        const sidebar = document.querySelector('.sidebar');
+        const router = document.querySelector('.sidebar-router');
+        const option = document.querySelector('.sidebar-option');
+        const wrap = document.querySelector('.sidebar-wrap');
+        const content = document.querySelector('.content-wrap');
+
+        if (isActive) {
+            sidebar.classList.add('active');
+            router.classList.add('col-3');
+            option.classList.remove('hidden');
+            wrap.classList.remove('hidden_sidebar');
+            content.classList.remove('hidden_sidebar_content');
+        } else {
+            sidebar.classList.remove('active');
+            router.classList.remove('col-3');
+            option.classList.add('hidden');
+            wrap.classList.add('hidden_sidebar');
+            content.classList.add('hidden_sidebar_content');
+        }
+    });
+</script>

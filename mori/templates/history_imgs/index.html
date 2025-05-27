@@ -1,0 +1,134 @@
+{% extends '../base/index.html' %}
+{% load static %}
+
+{% block title %}
+Dashboard - MORI
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<link rel="stylesheet" href="{% static 'css/history-img.css' %}">
+
+<section class="bg-white home-component">
+    {% include '../header/index.html' %}
+    <div class="top-bar">
+        <h1>Lịch sử tìm kiếm</h1>
+    </div>
+
+    <!-- Tab Menu -->
+    {% comment %} <div class="container mt-3">
+        <div class="tab-menu d-flex">
+            <a href="#" data-tab="tatca">Tất cả</a>
+            <a href="#" data-tab="find_ai">Tìm AI</a>
+            <a href="#" data-tab="find_normal">Tìm thông thường</a>
+        </div>
+    </div> {% endcomment %}
+
+    <!-- Các thẻ hiển thị -->
+    <div class="design-section" id="history-cards">
+        <!-- Cards will be dynamically generated here -->
+    </div>
+
+    <div class="default-img-not-data row mt-2 px-2 text-center" id="default-img" style="display: none;">
+        <img src="{% static 'default/no_folder.png' %}" style="width: 350px; height: 350px;" alt="MORI" class="img-fluid">
+        <p class="text-muted">Không có dữ liệu</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle Tab Switching
+            const tabs = document.querySelectorAll('.tab-menu a');
+            const designCards = document.querySelectorAll('.design-card');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    const selectedTab = tab.getAttribute('data-tab');
+                    designCards.forEach(card => {
+                        const cardType = card.getAttribute('data-type');
+                        if (selectedTab === 'tatca' || cardType === selectedTab) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            fetch('/search-history/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${localStorage.getItem('token')}`, // Replace with actual token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const historyContainer = document.getElementById('history-cards');
+                const defaultImageContainer = document.getElementById('default-img');
+
+                if (data.length === 0) {
+                    defaultImageContainer.style.display = 'block';
+                } else {
+                    data.forEach(item => {
+                        const card = document.createElement('div');
+                        card.classList.add('design-card');
+                        card.setAttribute('data-type', item.search_type === 'image' ? 'find_ai' : 'find_normal');
+                        
+                        const cardHtml = `
+                            <img src="${item.liked_images?.[0]?.photo}" alt="Image">
+                            <div class="design-text">
+                                <h5>${item.search_query}</h5>
+                                <p>${item.search_date}</p>
+                            </div>
+                            <button class="delete-btn" data-id="${item.id_search_history}">
+                                <i class="bi bi-trash mr-2"></i>
+                            </button>
+                        `;
+                        card.innerHTML = cardHtml;
+                        historyContainer.appendChild(card);
+                    });
+
+                    defaultImageContainer.style.display = 'none';
+                    
+                    // Add event listener for delete button
+                    const deleteButtons = document.querySelectorAll('.delete-btn');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const id = button.getAttribute('data-id');
+                            const token = localStorage.getItem('token');
+                            fetch(`/search-history/${id}/`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `Token ${token}`,
+                                    'X-CSRFTOKEN': '{{ csrf_token }}',  // Add CSRF token for security
+                                    'accept': 'application/json',
+                                }
+                            })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Remove the card from DOM
+                                    button.closest('.design-card').remove();
+                                    console.log('Item deleted');
+                                } else {
+                                    console.error('Failed to delete the item');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error deleting item:', error);
+                            });
+                        });
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching history:', error);
+            });
+        });
+    </script>
+</section>
+
+{% endblock %}

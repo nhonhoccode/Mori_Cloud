@@ -1,0 +1,155 @@
+{% extends '../base/index.html' %}
+{% load static %}
+
+{% block title %}
+Profile - MORI
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+{% if user.is_authenticated %}
+<section class="bg-white profile-component">
+
+    {% include '../header/index.html' %}
+    <div class="profile-info text-center mt-4">
+        <div class="profile-img">
+            <div>
+                <img id="profile-avatar" class="rounded-circle" width="350" alt="Profile Image" src="/store/avatar/default_image/default.jpg">
+            </div>
+            <!-- Button to trigger modal for avatar change -->
+            <button class="btn btn-secondary mt-3" data-bs-toggle="modal" data-bs-target="#avatarUploadModal">
+                <i class="fa fa-edit"></i>
+            </button>
+        </div>
+        <div class="profile-details mt-4">
+            <h5 class="profile-name" id="profile-name">{{ user.name }}</h5>
+            <input type="text" id="profile-name-input" class="d-none form-control" value="{{ user.name }}">
+
+            <p class="profile-email" id="profile-email">{{ user.email }}</p>
+            <input type="email" id="profile-email-input" class="d-none form-control" value="{{ user.email }}">
+        </div>
+    </div>
+
+    <!-- Modal for uploading image -->
+    <div class="modal fade" id="avatarUploadModal" tabindex="-1" aria-labelledby="avatarUploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="avatarUploadModalLabel"> Tải ảnh lên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="avatarUploadForm" class="text-center" enctype="multipart/form-data">
+                        <!-- Input file cho phép chọn nhiều ảnh -->
+                        <input type="file" id="avatarUploadFile" class="d-none" accept="image/*">
+
+                        <!-- Nhãn giả cho input file -->
+                        <label for="avatarUploadFile" class="custom-file-label">
+                            <i class="bi bi-image me-1"></i> Chọn ảnh
+                        </label>
+
+                        <!-- Hiển thị tên file đã chọn -->
+                        <div id="avatarFileNameDisplay" class="mt-2 text-muted hidden">Chưa chọn file</div>
+
+                        <!-- Khu vực preview ảnh -->
+                        <div id="avatarPreviewContainer" class="d-flex flex-wrap justify-content-center mt-3 gap-2">
+                            <!-- Ảnh sẽ được thêm vào đây bằng JavaScript -->
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="handleAvatarUpload()">Tải lên</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    // Handle file selection and preview for avatar
+    document.getElementById('avatarUploadFile').addEventListener('change', function(event) {
+        const fileList = event.target.files;
+        const fileNameDisplay = document.getElementById('avatarFileNameDisplay');
+        const previewContainer = document.getElementById('avatarPreviewContainer');
+
+        // Show the name of the selected file(s)
+        if (fileList.length > 0) {
+            fileNameDisplay.textContent = fileList.length + " ảnh đã chọn";
+            fileNameDisplay.classList.remove('hidden');
+
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+
+            // Display preview images
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    imgElement.classList.add('img-thumbnail', 'preview-img');
+                    previewContainer.appendChild(imgElement);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+</script>
+
+<script>
+    // Handle avatar image upload
+    function handleAvatarUpload() {
+        const formData = new FormData(document.getElementById('avatarUploadForm'));
+        const uploadButton = document.querySelector('.btn-primary');
+
+        // Check if the file is correctly appended to the FormData object
+        const fileInput = document.getElementById('avatarUploadFile');
+        if (fileInput.files.length === 0) {
+            alert('Please select a file to upload.');
+            return;
+        }
+
+        // Add the file manually to FormData to ensure it's included
+        formData.append('avatar', fileInput.files[0]);
+
+        // Debug: Log the FormData to check the contents
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);  // This will log the form data, including the file
+        }
+
+        // Disable the button to prevent multiple clicks
+        uploadButton.disabled = true;
+
+        fetch('/avatar/', {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,  // Get token from localStorage
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            {% comment %} alert('Error uploading image'); {% endcomment %}
+        })
+        .finally(() => {
+            // Re-enable the upload button
+            uploadButton.disabled = false;
+        });
+    }
+</script>
+
+
+
+{% endif %}
+{% endblock %}

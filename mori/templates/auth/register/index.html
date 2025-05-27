@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <!-- Link Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<!-- Toastify JS -->
+
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+        <!-- Left Section -->
+        <div class="relative flex-1 bg-black text-white flex flex-col justify-center items-center p-10">
+            <img src="https://github.githubassets.com/assets/bg-darkest--wide@2x-3a969c95af5f.webp" alt="GitHub Logo"
+                class="absolute inset-0 w-full h-full object-cover">
+            <div class="relative z-10 text-center">
+                <h1 class="text-4xl font-bold mb-4">Tạo tài khoảng miễn phí</h1>
+                <p class="text-lg mb-4">Khám phá sức mạnh của AI trong quản lý kí ức</p>
+                <a href="/page/landing" class="text-blue-400 underline">Khám phá thêm ↓</a>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="flex-1 bg-white flex flex-col justify-center items-center p-10">
+            <div class="w-full max-w-md">
+                <div class="text-right mb-4">
+                    <a href="/page/login" class="text-gray-600 hover:underline">Bạn đã có tài khoảng? <span
+                            class="text-blue-500">Đăng nhập →</span></a>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <a href="/page/landing">Đăng kí MORI</a>
+                </h2>
+                <form action="/signup" method="POST" class="space-y-4">
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Username" required
+                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">Tên người dùng chỉ có thể chứa các ký tự chữ và số hoặc
+                            dấu gạch nối đơn và không thể bắt đầu hoặc kết thúc bằng dấu gạch nối.</p>
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Email" required
+                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Password" required
+                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">Mật khẩu phải có ít nhất 15 ký tự hoặc ít nhất 8 ký tự bao
+                            gồm một số và chữ thường.</p>
+                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full py-2 bg-purple-600 text-white font-semibold rounded-md hover:bg-purple-700 transition">
+                        Đăng kí →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Messages -->
+    <div id="nameError" class="text-red-500 mt-2 text-sm hidden"></div>
+    <div id="emailError" class="text-red-500 mt-2 text-sm hidden"></div>
+    <div id="passwordError" class="text-red-500 mt-2 text-sm hidden"></div>
+    <div id="errorMessage" class="text-red-500 mt-4 text-center hidden"></div>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <script>
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Ngăn hành động submit mặc định của form
+    
+            // Lấy giá trị từ các trường input
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const username = document.getElementById('username').value;
+    
+            // Tạo payload để gửi lên API đăng ký
+            const payload = {
+                name: username,
+                email: email,
+                password: password
+            };
+    
+            console.log('Payload:', payload);
+    
+            // Ẩn các thông báo lỗi cũ trước khi gửi yêu cầu
+            document.getElementById('nameError').classList.add('hidden');
+            document.getElementById('emailError').classList.add('hidden');
+            document.getElementById('passwordError').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+    
+            try {
+                // Gọi API đăng ký với phương thức POST
+                const response = await fetch('/user/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+    
+                if (!response.ok) {
+                    // Đảm bảo dữ liệu trả về là JSON
+                    const data = await response.json();
+    
+                    // Hiển thị lỗi cho từng trường nếu có
+                    if (data.name && data.name.length > 0) {
+                        document.getElementById('nameError').textContent = data.name[0];
+                        document.getElementById('nameError').classList.remove('hidden');
+    
+                        // Thông báo noti trực quan cho trường name
+                        Toastify({
+                            text: data.name[0],
+                            duration: 3000,
+                            close: true,
+                            gravity: "top", // Hiển thị phía trên
+                            position: "center", // Hiển thị ở giữa
+                            backgroundColor: "#ff4d4f", // Màu nền đỏ
+                            stopOnFocus: true,
+                        }).showToast();
+                    }
+    
+                    if (data.email && data.email.length > 0) {
+                        document.getElementById('emailError').textContent = data.email[0];
+                        document.getElementById('emailError').classList.remove('hidden');
+    
+                        // Thông báo noti trực quan cho trường email
+                        Toastify({
+                            text: data.email[0],
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#ff4d4f",
+                            stopOnFocus: true,
+                        }).showToast();
+                    }
+    
+                    if (data.password && data.password.length > 0) {
+                        document.getElementById('passwordError').textContent = data.password[0];
+                        document.getElementById('passwordError').classList.remove('hidden');
+    
+                        // Thông báo noti trực quan cho trường password
+                        Toastify({
+                            text: data.password[0],
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#ff4d4f",
+                            stopOnFocus: true,
+                        }).showToast();
+                    }
+    
+                    return;
+                }
+    
+                // Đăng ký thành công
+                const data = await response.json();
+                console.log('Đăng ký thành công:', data);
+    
+                // Hiển thị thông báo thành công
+                Toastify({
+                    text: "Đăng ký thành công!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#4caf50", // Màu xanh cho thành công
+                    stopOnFocus: true,
+                }).showToast();
+    
+                // Chuyển hướng người dùng sau khi đăng ký thành công
+                setTimeout(() => {
+                    window.location.href = '/page/login';
+                }, 1500);
+    
+            } catch (error) {
+                console.error('Lỗi khi đăng ký:', error);
+    
+                // Hiển thị thông báo lỗi chung cho người dùng
+                Toastify({
+                    text: 'Đã có lỗi xảy ra. Vui lòng thử lại sau!',
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#ff4d4f",
+                    stopOnFocus: true,
+                }).showToast();
+            }
+        });
+    </script>
+    
+</body>
+
+</html>

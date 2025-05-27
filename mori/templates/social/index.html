@@ -1,0 +1,821 @@
+{% extends '../base/index.html' %}
+{% load static %}
+
+{% block title %}
+Dashboard - MORI
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/social.css' %}">
+
+<section class="bg-white home-component">
+
+    {% include '../header/index.html' %}
+
+    <div class="wrap-post">
+        <!-- Nếu không có bài đăng, sẽ hiển thị hình ảnh mặc định -->
+        <div class="default-img-not-data text-center">
+            <img src="{% static 'default/no_folder.png' %}" alt="Không có dữ liệu" class="img-fluid">
+            <p class="text-muted">Hiện tại không có ảnh nào.</p>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        const wrapPost = document.querySelector(".wrap-post");
+        let isFetching = false;
+
+        // Ngưỡng số comment hiển thị ban đầu
+        const threshold = 5;
+
+        function organizeComments(comments) {
+            const commentMap = new Map();
+            const rootComments = [];
+        
+            // Bước 1: Map tất cả comments theo id
+            comments.forEach(comment => {
+                comment.replies = [];  // Chuẩn bị sẵn mảng reply
+                commentMap.set(comment.id_comment, comment);
+            });
+        
+            // Bước 2: Xếp vào cha hoặc vào root
+            comments.forEach(comment => {
+                if (comment.parent_comment === null) {
+                    // Comment gốc
+                    rootComments.push(comment);
+                } else {
+                    const parent = commentMap.get(comment.parent_comment);
+                    if (parent) {
+                        parent.replies.push(comment);
+                    }
+                }
+            });
+        
+            return rootComments; // danh sách comments gốc (và mỗi gốc đã có replies)
+        }
+
+        async function fetchPublicPhotos() {
+            try {
+                const response = await fetch('/photo-public/', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const photos = await response.json();
+
+                // ✅ Áp dụng organize comments cho mỗi photo:
+                photos.forEach(photo => {
+                    photo.comments = organizeComments(photo.comments);
+                });
+
+                console.log(photos);
+                
+                return photos;
+            } catch (error) {
+                console.error("Lỗi khi tải ảnh công khai:", error);
+                return [];
+            }
+        }
+
+        function renderPhotos(photos, append = false) {
+            if (!append) {
+                wrapPost.innerHTML = "";
+            }
+
+            {% comment %}
+            if (photos.length === 0) {
+                wrapPost.innerHTML = `
+                    <div class="default-img-not-data text-center">
+                        <img src="{% static '/default/no_folder.png' %}" alt="Không có dữ liệu" class="img-fluid">
+                        <p class="text-muted">Hiện tại không có ảnh nào.</p>
+                    </div>
+                `;
+                return;
+            } {% endcomment %}
+
+            photos?.forEach(photo => {
+                const postEl = document.createElement("div");
+                postEl.classList.add("post");
+                postEl.innerHTML = `
+                    <div class="post-card" photo-id="${photo.id_photo}">
+                        <div class="post-header" photo-id="${photo.id_photo}">
+                            <img src="${photo.uploaded_by.avatar || '/store/avatar/default_image/default.jpg'}" alt="User">
+                            <div class="post-info">
+                                <h6 class="mb-0">${photo.uploaded_by.name}</h6>
+                                <small>${new Date(photo.created_at).toLocaleString()}</small>
+                            </div>
+                        </div>
+                        <p class="post-description">${photo.description || "Không có mô tả."}</p>
+                        <img src="${photo.photo_path || '{% static "default/no_image.png" %}'}" 
+                             alt="Design" class="photo-image" style="cursor: pointer;">
+                        <div class="post-actions">
+                            <div>
+                                <span class="count-likes" style="cursor: pointer; color: black; margin-right: 5px;">${photo.like_count || 0}</span>
+                                <i class="fas fa-heart"></i>
+                            </div>
+
+                            <span class="count-comments" style="cursor: pointer; color: black; margin-right: 5px;">${photo.comments.length || 0} ${photo.comments.length > 1 ? "comments" : "comment" }</span>
+                        </div>
+                        <div class="post-comments">
+                            <div class="comments-list">
+                                <!-- Vùng hiển thị comment -->
+                            </div>
+                            <!-- Nút xem thêm comment để riêng, luôn nằm dưới -->
+                            <a href="#" class="view-more-comments" style="display: none;">Xem thêm comment</a>
+
+                            <div class="comment-form">
+                                <div class="px-1 py-2">
+                                    <img class="img-chat" id="profile-avatar" src="${localStorage.getItem('avatar') || '/store/avatar/default_image/default.jpg'}" alt="User">
+                                </div>
+                                <input type="text" class="comment-input" placeholder="Nhập comment..." />
+                                <button class="comment-submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                async function submitComment(photo, commentText, postEl) {
+                    try {
+                        const response = await fetch('/comments/photo/', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id_photo: photo.id_photo,
+                                content: commentText,
+                                id_parent: 0
+                            })
+                        });
+                        if (!response.ok) {
+                            throw new Error('Failed to submit comment');
+                        }
+                        const newComment = await response.json();
+                        
+                        // Thêm comment mới vào danh sách
+                        const commentsList = postEl.querySelector('.comments-list');
+                        const viewMoreBtn = postEl.querySelector('.view-more-comments');
+        
+                        // Khung bình luận
+                        const commentEl = document.createElement('div');
+                        commentEl.classList.add('comment');
+                        commentEl.setAttribute('data-comment-id', newComment.id_comment);  // ✅ set ID
+                        commentEl.setAttribute('data-parent-id', newComment.id_parent); // nếu bạn muốn dùng lại sa
+                        commentEl.setAttribute('data-level', '0');  
+                        commentEl.style.display = 'flex';
+                        commentEl.style.alignItems = 'flex-start';
+                        {% comment %} commentEl.style.marginBottom = '10px'; {% endcomment %}
+        
+                        // Avatar
+                        const avatar = document.createElement('img');
+                        avatar.classList.add('img-chat-comment');
+                        avatar.src = localStorage.getItem("avatar") || '/store/avatar/default_image/default.jpg';
+                        avatar.alt = 'User';
+                        avatar.style.width = '20px';
+                        avatar.style.height = '20px';
+                        avatar.style.borderRadius = '50%';
+                        {% comment %} avatar.style.marginRight = '10px'; {% endcomment %}
+        
+                        // Phần nội dung bên phải avatar
+                        const commentBody = document.createElement('div');
+                        commentBody.classList.add('comment-body');
+                        
+        
+                        // Tên người dùng
+                        const userName = document.createElement('h6');
+                        userName.textContent = newComment.user?.name || 'Ẩn danh';
+                        userName.style.margin = 0;
+        
+                        // Nội dung bình luận
+                        const contentSpan = document.createElement('span');
+                        contentSpan.textContent = newComment.content || commentText;
+                        contentSpan.style.display = 'block';
+                        contentSpan.style.margin = '2px 0';
+        
+                        // Thời gian
+                        const p = document.createElement('p');
+                        p.classList.add("comment-date");
+                        p.textContent = "Vừa xong";
+                        p.style.fontSize = '12px';
+                        p.style.color = 'gray';
+                        p.style.margin = 0;
+                        
+
+                        const btnDelete = document.createElement('button')
+                        btnDelete.classList.add("btn-delete");
+                        btnDelete.textContent = "Xóa";
+                        btnDelete.style.fontSize = '12px';
+                        btnDelete.style.color = 'gray';
+                        btnDelete.style.margin = 0;
+
+                        const btnReply = document.createElement('button')
+                        btnReply.classList.add("btn-reply");
+                        btnReply.textContent = "Phản hồi";
+                        btnReply.style.fontSize = '12px';
+                        btnReply.style.color = 'gray';
+                        btnReply.style.margin = 0;
+
+        
+                        // Gắn các phần vào commentBody
+                        commentBody.appendChild(userName);
+                        commentBody.appendChild(contentSpan);
+                        commentBody.appendChild(p);
+                        commentBody.appendChild(btnDelete);
+                        commentBody.appendChild(btnReply);
+        
+                        // Gắn avatar và commentBody vào commentEl
+                        commentEl.appendChild(avatar);
+                        commentEl.appendChild(commentBody);
+        
+                        // Thêm vào danh sách
+                        commentsList.appendChild(commentEl);
+        
+        
+        
+                        const countCommentEl = postEl.querySelector('.count-comments');
+                        let count = parseInt(countCommentEl.textContent) || 0;
+                        count += 1;
+                        countCommentEl.textContent = count + " " + (count > 1 ? "comments" : "comment");
+        
+        
+        
+                        // Cập nhật hiển thị nút viewMore
+                        const totalCommentEls = commentsList.querySelectorAll('.comment').length;
+                        if (totalCommentEls > threshold) {
+                            viewMoreBtn.style.display = "block";
+                        } else {
+                            viewMoreBtn.style.display = "none";
+                        }
+                    } catch (error) {
+                        console.error("Lỗi khi gửi comment:", error);
+                    }
+                }
+
+
+
+                // Lấy vùng comments-list và nút view-more
+                const commentsList = postEl.querySelector('.comments-list');
+                const viewMoreBtn = postEl.querySelector('.view-more-comments');
+
+                function renderComment(commentData, container, level = 0, is_delete = true) {
+                    const commentEl = document.createElement('div');
+                    commentEl.classList.add('comment');
+                    // ✅ Đặt đúng attribute để lát lấy ra parent id khi reply
+                    commentEl.setAttribute('data-comment-id', commentData.id_comment);
+                    commentEl.setAttribute('data-parent-id', commentData.id_parent); // nếu bạn muốn dùng lại sau
+                    commentEl.setAttribute('data-level', level);
+                    commentEl.style.display = 'flex';
+                    commentEl.style.alignItems = 'flex-start';
+                    commentEl.style.marginLeft = `${level * 20}px`; // Indent theo cấp độ comment
+                
+                    // Avatar
+                    const avatar = document.createElement('img');
+                    avatar.classList.add('img-chat-comment');
+                    avatar.src = commentData.user?.avatar || '/store/avatar/default_image/default.jpg';
+                    avatar.alt = 'User';
+                    avatar.style.width = '20px';
+                    avatar.style.height = '20px';
+                    avatar.style.borderRadius = '50%';
+                
+                    // Nội dung bình luận
+                    const commentBody = document.createElement('div');
+                    commentBody.classList.add('comment-body');
+                
+                    // Tên người dùng
+                    const userName = document.createElement('h6');
+                    userName.textContent = commentData.user?.name || 'Ẩn danh';
+                    userName.style.margin = 0;
+                
+                    // Nội dung
+                    const contentSpan = document.createElement('span');
+                    contentSpan.textContent = commentData.content || '';
+                    contentSpan.style.display = 'block';
+                    contentSpan.style.margin = '2px 0';
+                
+                    // Thời gian
+                    const p = document.createElement('p');
+                    p.classList.add('comment-date');
+                    p.textContent = commentData.created_at || 'Không rõ thời gian';
+                    p.style.fontSize = '12px';
+                    p.style.color = 'gray';
+                    p.style.margin = 0;
+
+                    const btnDelete = document.createElement('button')
+                    btnDelete.classList.add("btn-delete");
+                    btnDelete.textContent = "Xóa";
+                    btnDelete.style.fontSize = '12px';
+                    btnDelete.style.color = 'gray';
+                    btnDelete.style.margin = 0;
+                
+                    // Button phản hồi
+                    const btnReply = document.createElement('button');
+                    btnReply.classList.add('btn-reply');
+                    btnReply.textContent = "Phản hồi";
+                    btnReply.style.fontSize = '12px';
+                    btnReply.style.color = 'gray';
+                    btnReply.style.margin = 0;
+                    
+                
+                    // Gắn các phần vào commentBody
+                    commentBody.appendChild(userName);
+                    commentBody.appendChild(contentSpan);
+                    commentBody.appendChild(p);
+
+                    if(commentData?.user?.id_user == localStorage.getItem("id_user")) {
+                        commentBody.appendChild(btnDelete);
+                    }
+
+                    commentBody.appendChild(btnReply);
+                    commentEl.appendChild(avatar);
+                    commentEl.appendChild(commentBody);
+                
+                    container.appendChild(commentEl);
+                
+                    // Nếu comment này có replies thì render tiếp
+                    if (commentData.replies && commentData.replies.length > 0) {
+                        commentData.replies.forEach(reply => {
+                            renderComment(reply, container, level + 1, true);
+                        });
+                    }
+                }
+
+                // Render comment, ẩn comment vượt quá threshold
+                if (photo.comments && photo.comments.length > 0) {
+                     // Nếu số comment vượt threshold thì hiển thị nút "Xem thêm"
+                    if (photo.comments.length > threshold) {
+                        viewMoreBtn.style.display = "flex";
+                    }
+
+                    photo.comments.forEach(comment => {
+                        renderComment(comment, commentsList);
+                    });
+
+                   
+                }
+
+                // Xử lý click vào nút xem thêm comment
+                viewMoreBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const commentEls = commentsList.querySelectorAll(".comment");
+                    // Kiểm tra xem có comment nào đang ẩn không
+                    let hiddenExists = false;
+                    commentEls.forEach((el, idx) => {
+                        if (idx >= threshold && el.style.display === "none") {
+                            hiddenExists = true;
+                        }
+                    });
+
+                    if (hiddenExists) {
+                        // Hiện tất cả comment sau threshold
+                        commentEls.forEach((el, idx) => {
+                            if (idx >= threshold) {
+                                el.style.display = "flex";
+                            }
+                        });
+                        viewMoreBtn.textContent = "Ẩn bớt comment";
+                    } else {
+                        // Ẩn lại các comment sau threshold
+                        commentEls.forEach((el, idx) => {
+                            if (idx >= threshold) {
+                                el.style.display = "none";
+                            }
+                        });
+                        viewMoreBtn.textContent = "Xem thêm comment";
+                    }
+                });
+
+                // Sử dụng click event với logic double-click custom cho ảnh
+                const imgEl = postEl.querySelector('.photo-image');
+                imgEl.addEventListener("click", function (e) {
+                    if (!imgEl.dataset.lastClickTime) {
+                        imgEl.dataset.lastClickTime = Date.now();
+                    } else {
+                        const diff = Date.now() - parseInt(imgEl.dataset.lastClickTime);
+                        if (diff < 800) {
+                            createHeart(e, postEl);
+                            handleLike(photo, postEl);
+                            delete imgEl.dataset.lastClickTime;
+                        } else {
+                            imgEl.dataset.lastClickTime = Date.now();
+                        }
+                    }
+                });
+
+                // Xử lý gửi comment mới: hỗ trợ ấn Enter và click nút gửi
+                const commentInput = postEl.querySelector('.comment-input');
+                const commentSubmit = postEl.querySelector('.comment-submit');
+
+                commentSubmit.addEventListener("click", async function () {
+                    const commentText = commentInput.value.trim();
+                    if (commentText !== "") {
+                        await submitComment(photo, commentText, postEl);
+                        commentInput.value = "";
+                    }
+                });
+                commentInput.addEventListener("keyup", async function(e) {
+                    if (e.key === "Enter") {
+                        const commentText = commentInput.value.trim();
+                        if (commentText !== "") {
+                            await submitComment(photo, commentText, postEl);
+                            commentInput.value = "";
+                        }
+                    }
+                });
+
+                wrapPost.appendChild(postEl);
+            });
+        }
+
+        async function submitComment(photo, commentText, postEl) {
+            try {
+                const response = await fetch('/comments/photo/', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Token ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id_photo: photo.id_photo,
+                        content: commentText,
+                        id_parent: 0
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to submit comment');
+                }
+                const newComment = await response.json();
+                
+                // Thêm comment mới vào danh sách
+                const commentsList = postEl.querySelector('.comments-list');
+                const viewMoreBtn = postEl.querySelector('.view-more-comments');
+
+                // Khung bình luận
+                const commentEl = document.createElement('div');
+                commentEl.classList.add('comment');
+                commentEl.setAttribute('data-comment-id', newComment.id_comment);  // ✅ set ID
+                commentEl.setAttribute('data-parent-id', newComment.id_parent); // nếu bạn muốn dùng lại sau
+                commentEl.setAttribute('data-level', '0');  
+                commentEl.style.display = 'flex';
+                commentEl.style.alignItems = 'flex-start';
+                {% comment %} commentEl.style.marginBottom = '10px'; {% endcomment %}
+
+                // Avatar
+                const avatar = document.createElement('img');
+                avatar.classList.add('img-chat-comment');
+                avatar.src = localStorage.getItem("avatar") || '/store/avatar/default_image/default.jpg';
+                avatar.alt = 'User';
+                avatar.style.width = '20px';
+                avatar.style.height = '20px';
+                avatar.style.borderRadius = '50%';
+                {% comment %} avatar.style.marginRight = '10px'; {% endcomment %}
+
+                // Phần nội dung bên phải avatar
+                const commentBody = document.createElement('div');
+                commentBody.classList.add('comment-body');
+                
+
+                // Tên người dùng
+                const userName = document.createElement('h6');
+                userName.textContent = newComment.user?.name || 'Ẩn danh';
+                userName.style.margin = 0;
+
+                // Nội dung bình luận
+                const contentSpan = document.createElement('span');
+                contentSpan.textContent = newComment.content || commentText;
+                contentSpan.style.display = 'block';
+                contentSpan.style.margin = '2px 0';
+
+                // Thời gian
+                const p = document.createElement('p');
+                p.classList.add("comment-date");
+                p.textContent = "Vừa xong";
+                p.style.fontSize = '12px';
+                p.style.color = 'gray';
+                p.style.margin = 0;
+
+                const btnDelete = document.createElement('button')
+                btnDelete.classList.add("btn-delete");
+                btnDelete.textContent = "Xóa";
+                btnDelete.style.fontSize = '12px';
+                btnDelete.style.color = 'gray';
+                btnDelete.style.margin = 0;
+
+                const btnReply = document.createElement('button')
+                btnReply.classList.add("btn-reply");
+                btnReply.textContent = "Phản hồi";
+                btnReply.style.fontSize = '12px';
+                btnReply.style.color = 'gray';
+                btnReply.style.margin = 0;
+
+
+                // Gắn các phần vào commentBody
+                commentBody.appendChild(userName);
+                commentBody.appendChild(contentSpan);
+                commentBody.appendChild(p);
+                commentBody.appendChild(btnDelete);
+                commentBody.appendChild(btnReply);
+
+                // Gắn avatar và commentBody vào commentEl
+                commentEl.appendChild(avatar);
+                commentEl.appendChild(commentBody);
+
+                // Thêm vào danh sách
+                commentsList.appendChild(commentEl);
+
+
+
+                const countCommentEl = postEl.querySelector('.count-comments');
+                let count = parseInt(countCommentEl.textContent) || 0;
+                count += 1;
+                countCommentEl.textContent = count + " " + (count > 1 ? "comments" : "comment");
+
+
+
+                // Cập nhật hiển thị nút viewMore
+                const totalCommentEls = commentsList.querySelectorAll('.comment').length;
+                if (totalCommentEls > threshold) {
+                    viewMoreBtn.style.display = "block";
+                } else {
+                    viewMoreBtn.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Lỗi khi gửi comment:", error);
+            }
+        }
+
+        async function loadPhotos(append = false) {
+            if (isFetching) return;
+            isFetching = true;
+            const photos = await fetchPublicPhotos();
+            renderPhotos(photos, append);
+            isFetching = false;
+        }
+
+        // Hàm xử lý like (gọi API và cập nhật giao diện)
+        async function handleLike(photo, postEl) {
+            const likeCountEl = postEl.querySelector('.count-likes');
+            let count = parseInt(likeCountEl.textContent) || 0;
+            count += 1;
+            likeCountEl.textContent = count;
+
+            try {
+                const response = await fetch('/like/', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Token ${localStorage.getItem('token')}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ photos: [ photo.id_photo ] })
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to update like');
+                }
+            } catch (error) {
+                console.error("Lỗi khi cập nhật like:", error);
+            }
+        }
+
+        // Hàm tạo hiệu ứng trái tim tại vị trí click
+        function createHeart(e, postEl) {
+            const heart = document.createElement('i');
+            heart.classList.add('fas', 'fa-heart');
+            const container = postEl.querySelector('.post-card');
+            const rect = container.getBoundingClientRect();
+            const xInside = e.clientX - rect.left;
+            const yInside = e.clientY - rect.top;
+            heart.style.position = "absolute";
+            heart.style.top = `${yInside}px`;
+            heart.style.left = `${xInside}px`;
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        loadPhotos();
+
+        wrapPost.addEventListener("scroll", async function () {
+            if (wrapPost.scrollTop + wrapPost.clientHeight >= wrapPost.scrollHeight - 100) {
+                await loadPhotos(true);
+            }
+        });
+
+        // Bắt sự kiện click nút "Phản hồi"
+        wrapPost.addEventListener('click', function(event) {
+            if (event.target.classList.contains('btn-reply')) {
+                event.preventDefault();
+                
+                const commentEl = event.target.closest('.comment-body');
+                
+                // Nếu đã có form rồi thì không tạo thêm
+                if (commentEl.querySelector('.reply-form')) return;
+                
+                // Tạo form nhập reply
+                const replyForm = document.createElement('div');
+                replyForm.classList.add('reply-form');
+                replyForm.style.marginTop = '8px';
+                
+                const replyInput = document.createElement('input');
+                replyInput.type = 'text';
+                replyInput.placeholder = 'Nhập trả lời...';
+                replyInput.classList.add('form-control');
+                replyInput.style.marginBottom = '4px';
+                
+                const replyButton = document.createElement('button');
+                replyButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                replyButton.classList.add('btn', 'btn-primary', 'btn-sm');
+                
+                replyForm.appendChild(replyInput);
+                replyForm.appendChild(replyButton);
+                commentEl.appendChild(replyForm);
+
+                // Gửi reply
+                replyButton.addEventListener('click', async function () {
+                    const replyText = replyInput.value.trim();
+                    if (replyText === '') return;
+                
+                    const postCard = commentEl.closest('.post-card');
+                    const photoId = postCard.getAttribute('photo-id');
+                    const parentCommentEl = commentEl.closest('.comment');
+                    const parentCommentId = parentCommentEl.getAttribute('data-comment-id');
+                
+                    try {
+                        const response = await fetch('/comments/photo/', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                id_photo: parseInt(photoId),
+                                content: replyText,
+                                id_parent: parseInt(parentCommentId)
+                            })
+                        });
+                
+                        if (!response.ok) {
+                            throw new Error('Failed to submit reply');
+                        }
+                
+                        const newReply = await response.json();
+                
+                        // Tạo thẻ reply
+                        const newReplyEl = document.createElement('div');
+                        newReplyEl.classList.add('comment');
+                        newReplyEl.style.display = 'flex';
+                        newReplyEl.style.alignItems = 'flex-start';
+                        const parentLevel = parseInt(parentCommentEl.getAttribute('data-level') || '0');
+                        const replyLevel = parentLevel + 1;
+                        newReplyEl.style.marginLeft = `${replyLevel * 20}px`;
+                        newReplyEl.setAttribute('data-level', replyLevel);
+                        newReplyEl.setAttribute('data-comment-id', newReply.id_comment); // nếu bạn muốn dùng lại sau
+                        newReplyEl.setAttribute('data-parent-id', parentCommentId); // nếu bạn muốn dùng lại sau
+                
+                        const avatar = document.createElement('img');
+                        avatar.classList.add('img-chat-comment');
+                        avatar.src = localStorage.getItem('avatar') || '/store/avatar/default_image/default.jpg';
+                        avatar.alt = 'User';
+                        avatar.style.width = '20px';
+                        avatar.style.height = '20px';
+                        avatar.style.borderRadius = '50%';
+                
+                        const replyBody = document.createElement('div');
+                        replyBody.classList.add('comment-body');
+                
+                        const userName = document.createElement('h6');
+                        userName.textContent = localStorage.getItem('username') || 'Bạn';
+                        userName.style.margin = 0;
+                
+                        const contentSpan = document.createElement('span');
+                        contentSpan.textContent = replyText;
+                        contentSpan.style.display = 'block';
+                        contentSpan.style.margin = '2px 0';
+                
+                        const p = document.createElement('p');
+                        p.classList.add('comment-date');
+                        p.textContent = "Vừa xong";
+                        p.style.fontSize = '12px';
+                        p.style.color = 'gray';
+                        p.style.margin = 0;
+                
+                        const btnDelete = document.createElement('button')
+                        btnDelete.classList.add("btn-delete");
+                        btnDelete.textContent = "Xóa";
+                        btnDelete.style.fontSize = '12px';
+                        btnDelete.style.color = 'gray';
+                        btnDelete.style.margin = 0;
+
+                        // Nút phản hồi (có thể thêm nếu muốn tiếp tục nested)
+                        const btnReply = document.createElement('button');
+                        btnReply.classList.add('btn-reply');
+                        btnReply.textContent = 'Phản hồi';
+                        btnReply.style.fontSize = '12px';
+                        btnReply.style.color = 'gray';
+                        btnReply.style.margin = 0;
+                
+                        replyBody.appendChild(userName);
+                        replyBody.appendChild(contentSpan);
+                        replyBody.appendChild(p);
+                        replyBody.appendChild(btnDelete);
+                        replyBody.appendChild(btnReply);
+                
+                        newReplyEl.appendChild(avatar);
+                        newReplyEl.appendChild(replyBody);
+                
+                        // ✅ Chèn ngay sau comment cha
+                        parentCommentEl.after(newReplyEl);
+                
+                        // Xoá form
+                        replyInput.value = '';
+                        replyForm.remove();
+                
+                    } catch (error) {
+                        console.error('Lỗi gửi reply:', error);
+                        alert('Gửi phản hồi thất bại!');
+                    }
+                });
+                
+            }
+        });
+
+        // Bắt sự kiện click nút "Xóa"
+        wrapPost.addEventListener('click', async function (event) {
+            if (event.target.classList.contains('btn-delete')) {
+                event.preventDefault();
+                const commentEl = event.target.closest('.comment');
+                const commentId = commentEl.getAttribute('data-comment-id');
+
+                try {
+                    const response = await fetch(`/comments/${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Token ${localStorage.getItem('token')}`,
+                            'Accept': 'application/json',
+                            'X-CSRFTOKEN': localStorage.getItem('csrftoken') || ''
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Không thể xoá comment.");
+                    }
+
+                    // Xoá comment khỏi DOM
+                    commentEl.remove();
+
+                    // Xóa toàn bộ comment con
+                    const commentList = document.querySelector('.comments-list');
+                    console.log("commentList:", commentList);
+
+                    function deleteCommentAndChildren(commentId) {
+                        // Xóa tất cả các comment con trực tiếp
+                        const children = document.querySelectorAll(`[data-parent-id="${commentId}"]`);
+                        children.forEach(child => {
+                            // Gọi đệ quy để xóa các comment con của comment này
+                            const childId = child.getAttribute('data-comment-id'); // Giả sử mỗi comment có data-comment-id
+                            if (childId) {
+                                deleteCommentAndChildren(childId); // Đệ quy xóa các con của child
+                            }
+                            // Xóa comment hiện tại
+                            console.log("Xoá comment:", child);
+                            child.remove();
+                        });
+                    }
+
+                    deleteCommentAndChildren(commentId);
+
+                    {% comment %} commentList?.querySelectorAll(`[data-parent-id="${commentId}"]`).forEach(child => {
+                        console.log("Xoá comment con:", child);
+                        child.remove();
+                    }); {% endcomment %}
+
+                    // ✅ Cập nhật số lượng comment
+                    const postCard = commentEl.closest('.post-card');
+                    const countCommentEl = postCard.querySelector('.count-comments');
+                    let count = parseInt(countCommentEl.textContent) || 1;
+                    count = Math.max(0, count - 1);
+                    countCommentEl.textContent = count + " " + (count > 1 ? "comments" : "comment");
+
+                } catch (error) {
+                    console.error("Lỗi khi xoá comment:", error);
+                    {% comment %} alert("Xoá comment thất bại."); {% endcomment %}
+                }
+            }
+        });
+
+
+    });
+    </script>
+
+</section>
+
+{% endblock %}

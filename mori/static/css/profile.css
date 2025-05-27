@@ -1,0 +1,113 @@
+/* General profile layout styles */
+.profile-component {
+    background-color: #f5f0fe;
+    padding: 0 24px;
+    min-height: calc(100vh - 40px);
+    border-radius: 16px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.4);
+}
+
+.profile-header {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.profile-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Profile image and details */
+.profile-info {
+    margin-top: 30px;
+    text-align: center;
+}
+
+
+
+.profile-img img {
+    border: 5px solid #ddd;
+    border-radius: 50%;
+    transition: all 0.3s ease-in-out;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.profile-img img:hover {
+    transform: scale(1.02);
+}
+
+.profile-img .avatar {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.profile-details {
+    margin-top: 20px;
+}
+
+.profile-name,
+.profile-description,
+.profile-email {
+    font-size: 1.2rem;
+    color: #333 !important;
+    margin-bottom: 10px;
+}
+
+/* Input Fields Styles */
+.profile-details input.form-control {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    width: 80%;
+    margin: 10px auto;
+    display: block;
+}
+
+/* Profile actions */
+.profile-actions {
+    margin-top: 30px;
+}
+
+.profile-actions .btn {
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.profile-actions .btn-primary {
+    background-color: #8b3dff;
+    color: white;
+    border: none;
+}
+
+.profile-actions .btn-primary:hover {
+    background-color: #742ae1;
+}
+
+.profile-actions .btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.profile-actions .btn-success:hover {
+    background-color: #218838;
+}
+
+/* Hidden elements for toggling */
+.d-none {
+    display: none;
+}
+
+
+.uploadModalLabel {
+    color: black !important;
+}

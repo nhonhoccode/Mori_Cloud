@@ -1,0 +1,48 @@
+services:
+# Test trường hợp chạy local mở comment để chạy docker 
+  mori_search:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mori_search
+    depends_on:
+      - mori_db
+    # restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/mori_super_search
+
+  mori_db:
+    image: postgres:17.0
+    container_name: mori_db
+    env_file:
+      - .env
+    volumes:
+      - ./db_mori/schema/mori.sql:/docker-entrypoint-initdb.d/mori.sql:ro
+    restart: unless-stopped
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+# Test trường hợp chạy local mở comment để chạy docker 
+  trash_cron:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trash_cron
+    depends_on:
+      - mori_db
+    command: >
+      sh -c "while true; do python manage.py moritrashauto && sleep 86400; done"
+    volumes:
+      - ./:/mori_super_search
+
+  
+
+volumes:
+  db_mori:
+    driver: local

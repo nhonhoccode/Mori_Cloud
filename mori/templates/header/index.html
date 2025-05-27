@@ -1,0 +1,888 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/header.css' %}">
+{% if user.is_authenticated %}
+<header class="mb-2 header pt-2">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="search col-4">
+            <input type="text" class="form-control" placeholder="Tìm kiếm nội dung của bạn" id="searchQuery"
+                aria-label="Tìm kiếm nội dung của bạn" aria-describedby="button-addon2">
+            <span class="search-icon-header">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="black"
+                        d="M15.2 16.34a7.5 7.5 0 1 1 1.38-1.45l4.2 4.2a1 1 0 1 1-1.42 1.41l-4.16-4.16zm-4.7.16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z">
+                    </path>
+                </svg>
+            </span>
+            <span class="search-icon-ai">
+                <img src="https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png"
+                    alt="AI">
+            </span>
+            <span class="search-icon-camera" data-bs-toggle="modal" data-bs-target="#uploadModalSearch">
+                <svg xml:space="preserve" viewBox="0 0 192 192" width="30" height="30"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="144.07" cy="144" r="16" fill="#34A853" />
+                    <circle cx="96.07" cy="104" r="24" fill="#4285F4" />
+                    <path fill="#EA4335"
+                        d="M24 135.2c0 18.11 14.69 32.8 32.8 32.8H96v-16l-40.1-.1c-8.8 0-15.9-8.19-15.9-17.9v-18H24v19.2z" />
+                    <path fill="#FBBC04"
+                        d="M168 72.8c0-18.11-14.69-32.8-32.8-32.8H116l20 16c8.8 0 16 8.29 16 18v30h16V72.8z" />
+                    <path fill="#4285F4"
+                        d="M112 24H80L68 40H56.8C38.69 40 24 54.69 24 72.8V92h16V74c0-9.71 7.2-18 16-18h80l-24-32z" />
+                </svg>
+            </span>
+        </div>
+        <div class="user col-4">
+            {% comment %} <div class="setting">
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="black"
+                            d="M9 17.77c.37.19.75.34 1.15.46l.71 2.2c.73.1 1.47.1 2.2 0l.7-2.17c.47-.13.9-.31 1.31-.53l2.09 1.03c.58-.44 1.1-.96 1.55-1.53l-1.02-2.08c.25-.46.45-.95.6-1.47l2.16-.78c.08-.73.07-1.46-.05-2.18l-2.2-.7a6.47 6.47 0 0 0-.58-1.3l1-2.05c-.46-.57-1-1.09-1.59-1.52L15 6.23a6.46 6.46 0 0 0-1.15-.46l-.71-2.2c-.73-.1-1.47-.1-2.2 0l-.7 2.17c-.47.13-.9.31-1.31.53L6.84 5.24c-.58.44-1.1.96-1.55 1.53l1.02 2.08c-.25.46-.45.95-.6 1.47l-2.16.78c-.08.73-.07 1.46.05 2.18l2.2.7c.15.46.35.89.58 1.3l-1 2.05c.46.57 1 1.09 1.59 1.52L9 17.77zm-.02 1.71-2.1 1.11a9.94 9.94 0 0 1-3.24-3.1l1.1-2.27-2.44-.78a9.95 9.95 0 0 1-.1-4.45l2.55-.92-1.2-2.43a9.95 9.95 0 0 1 3.17-3.13l2.3 1.13.77-2.4a9.94 9.94 0 0 1 4.5.02l.73 2.26 2.1-1.11a9.94 9.94 0 0 1 3.24 3.1l-1.1 2.27 2.44.78c.36 1.43.4 2.95.1 4.45l-2.55.92 1.2 2.43a9.95 9.95 0 0 1-3.17 3.13l-2.3-1.13-.77 2.4a9.94 9.94 0 0 1-4.5-.02l-.73-2.26zM12 14.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 1.5a4 4 0 1 1 0-8 4 4 0 0 1 0 8z">
+                        </path>
+                    </svg>
+                </span>
+            </div> {% endcomment %}
+            <div class="noti-container">
+                <div class="noti-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path class="evJ6XQ" fill="black" d="M13.5 19H15a3 3 0 0 1-6 0h1.5a1.5 1.5 0 0 0 3 0z">
+                        </path>
+                        <path class="x9EzJQ" fill="black" fill-rule="evenodd"
+                            d="M20.04 17.5h.21a.75.75 0 1 1 0 1.5H3.75a.75.75 0 1 1 0-1.5h.21c1-1.15 1.82-2.7 1.82-5.97v-1.3a6.22 6.22 0 0 1 4.87-6.08 1.5 1.5 0 1 1 2.7 0 6.22 6.22 0 0 1 4.87 6.07v1.3c0 3.27.83 4.82 1.82 5.98zm-1.87 0c-.99-1.52-1.45-3.3-1.45-5.97v-1.3a4.72 4.72 0 0 0-9.44 0v1.3c0 2.67-.46 4.45-1.45 5.97h12.34z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="noti-dropdown">
+                    {% comment %} <div class="noti-header">Thông báo</div> {% endcomment %}
+                    <div id="notification-list" class="noti-list">
+                        <!-- Notifications will be loaded here -->
+                        <div class="noti-loading">Đang tải thông báo...</div>
+                    </div>
+                </div>
+                <div class="number-noti"></div>
+            </div>
+            <div class="info-user" onclick="toggleDropdown()">
+                <div>
+                    <img class="avatar" id="profile-avatar" src="/store/avatar/default_image/default.jpg" alt="User" class="rounded-circle">
+                </div>
+                <span>{{ user.name }}</span>
+                <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path fill="currentColor"
+                            d="M10.964 5.972 8.177 8.759a.25.25 0 0 1-.354 0L5.036 5.972a.75.75 0 1 0-1.06 1.06L6.762 9.82a1.75 1.75 0 0 0 2.475 0l2.787-2.788a.75.75 0 1 0-1.06-1.06">
+                        </path>
+                    </svg>
+                </span>
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <div class="dropdown-item profile-info">
+                        <img class="avatar" id="profile-avatar" src="/store/avatar/default_image/default.jpg" alt="User" class="rounded-circle">
+                        <h6>{{ user.name }}</h6>
+                    </div>
+                    <div class="dropdown-item">
+                        <a href="/page/profile">Tài khoản của tôi</a>
+                    </div>
+                    <div class="dropdown-item" onclick="logout()">
+                        <a href={% url 'account_logout' %}>Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="uploadModalSearch" tabindex="-1" aria-labelledby="uploadModalLabelSearch" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="uploadModalLabelSearch">Tải ảnh lên</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadForm" class="text-center">
+                            <input type="file" id="uploadFileSearch" class="d-none" multiple accept="image/*" onchange="previewImage()">
+                            <div style="flex 1; display: flex; flex-direction: column; align-items: center;">
+                                <img src="https://static.canva.com/web/images/2ad70535976a3d93f1f8daa4bb7f3598.png" alt="Upload" style="width: auto; height: 150px; cursor: pointer;">
+                                <label for="uploadFileSearch" class="custom-file-label">
+                                    <i class="bi bi-image me-1"></i> Chọn ảnh
+                                </label>
+                            </div>
+                            <div id="fileNameDisplay" class="mt-2 text-muted hidden">Chưa chọn file</div>
+                            <div id="previewContainerSearch" class="d-flex flex-wrap justify-content-center mt-3 gap-2"></div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary" onclick="searchImg()">Tìm kiếm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% endif %}
+
+<script>
+
+    threshold = 5
+
+    // Các hàm hiện có
+    function previewImage() {
+        const fileInput = document.getElementById('uploadFileSearch');
+        const file = fileInput.files[0];
+        const previewContainerSearch = document.getElementById('previewContainerSearch');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        if (!file) {
+            return;
+        }
+
+        fileNameDisplay.textContent = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '150px'; // Set the preview image size
+            img.style.height = '150px'; // Set the preview image size
+            previewContainerSearch.innerHTML = ''; // Clear previous previews
+            previewContainerSearch.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function toggleDropdown() {
+        var dropdown = document.getElementById("dropdown-menu");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Thêm hàm kiểm tra đường dẫn và điều chỉnh chức năng tìm kiếm
+    function getSearchMode() {
+        const currentPath = window.location.pathname;
+        
+        // Kiểm tra nếu đường dẫn là /page/social
+        if (currentPath.includes('/page/social')) {
+            return "social";
+        } else {
+            return "non-social";
+        }
+    }
+
+
+    async function submitComment(photo, commentText, postEl) {
+        try {
+            const response = await fetch('/comments/photo/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id_photo: photo.id_photo,
+                    content: commentText,
+                    id_parent: 0
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to submit comment');
+            }
+            const newComment = await response.json();
+            
+            // Thêm comment mới vào danh sách
+            const commentsList = postEl.querySelector('.comments-list');
+            const viewMoreBtn = postEl.querySelector('.view-more-comments');
+
+            // Khung bình luận
+            const commentEl = document.createElement('div');
+            commentEl.classList.add('comment');
+            commentEl.setAttribute('data-comment-id', newComment.id_comment);  // ✅ set ID
+            commentEl.setAttribute('data-parent-id', newComment.id_parent); // nếu bạn muốn dùng lại sau
+            commentEl.setAttribute('data-level', '0');  
+            commentEl.style.display = 'flex';
+            commentEl.style.alignItems = 'flex-start';
+            {% comment %} commentEl.style.marginBottom = '10px'; {% endcomment %}
+
+            // Avatar
+            const avatar = document.createElement('img');
+            avatar.classList.add('img-chat-comment');
+            avatar.src = localStorage.getItem("avatar") || '/store/avatar/default_image/default.jpg';
+            avatar.alt = 'User';
+            avatar.style.width = '20px';
+            avatar.style.height = '20px';
+            avatar.style.borderRadius = '50%';
+            {% comment %} avatar.style.marginRight = '10px'; {% endcomment %}
+
+            // Phần nội dung bên phải avatar
+            const commentBody = document.createElement('div');
+            commentBody.classList.add('comment-body');
+            
+
+            // Tên người dùng
+            const userName = document.createElement('h6');
+            userName.textContent = newComment.user?.name || 'Ẩn danh';
+            userName.style.margin = 0;
+
+            // Nội dung bình luận
+            const contentSpan = document.createElement('span');
+            contentSpan.textContent = newComment.content || commentText;
+            contentSpan.style.display = 'block';
+            contentSpan.style.margin = '2px 0';
+
+            // Thời gian
+            const p = document.createElement('p');
+            p.classList.add("comment-date");
+            p.textContent = "Vừa xong";
+            p.style.fontSize = '12px';
+            p.style.color = 'gray';
+            p.style.margin = 0;
+
+            const btnDelete = document.createElement('button')
+            btnDelete.classList.add("btn-delete");
+            btnDelete.textContent = "Xóa";
+            btnDelete.style.fontSize = '12px';
+            btnDelete.style.color = 'gray';
+            btnDelete.style.margin = 0;
+
+            const btnReply = document.createElement('button')
+            btnReply.classList.add("btn-reply");
+            btnReply.textContent = "Phản hồi";
+            btnReply.style.fontSize = '12px';
+            btnReply.style.color = 'gray';
+            btnReply.style.margin = 0;
+
+
+            // Gắn các phần vào commentBody
+            commentBody.appendChild(userName);
+            commentBody.appendChild(contentSpan);
+            commentBody.appendChild(p);
+            commentBody.appendChild(btnDelete);
+            
+            commentBody.appendChild(btnReply);
+
+            // Gắn avatar và commentBody vào commentEl
+            commentEl.appendChild(avatar);
+            commentEl.appendChild(commentBody);
+
+            // Thêm vào danh sách
+            commentsList.appendChild(commentEl);
+
+
+
+            const countCommentEl = postEl.querySelector('.count-comments');
+            let count = parseInt(countCommentEl.textContent) || 0;
+            count += 1;
+            countCommentEl.textContent = count + " " + (count > 1 ? "comments" : "comment");
+
+
+
+            // Cập nhật hiển thị nút viewMore
+            const totalCommentEls = commentsList.querySelectorAll('.comment').length;
+            if (totalCommentEls > threshold) {
+                viewMoreBtn.style.display = "block";
+            } else {
+                viewMoreBtn.style.display = "none";
+            }
+        } catch (error) {
+            console.error("Lỗi khi gửi comment:", error);
+        }
+    }
+
+    // Search function
+    function performSearch() {
+        const searchInput = document.querySelector('#searchQuery');
+        const query = searchInput.value.trim();
+        const aiIcon = document.querySelector('.search-icon-ai');
+        let mode = aiIcon.classList.contains('active_ai') ? "text" : "normal";
+        const searchModePage = getSearchMode();
+        let apiEndpoint;
+        let body;
+
+        let pageEndpoint;
+
+
+        if (searchModePage == "social") {
+            // Hiển thị toast đang tìm kiếm
+            const loadingToast = Toastify({
+                text: "Đang tìm kiếm...",
+                duration: -1,
+                close: true,
+                gravity: "top",
+                position: 'right',
+                backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+            });
+            loadingToast.showToast();
+        
+            if (mode === "text") {
+                apiEndpoint = `/search/photos/community/user/?mode=text&query=${encodeURIComponent(query)}&k=5`;
+            } else {
+                apiEndpoint = '/search/photo/normal/';
+                body = JSON.stringify({ "search_text": query });
+        
+                fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${localStorage.getItem('token')}`,
+                        'X-CSRFTOKEN': localStorage.getItem('csrftoken'),
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: body,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loadingToast.hideToast(); // Ẩn toast khi xong
+        
+                    Toastify({
+                        text: "Tìm kiếm hình ảnh thành công!",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: 'right',
+                        backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+                    }).showToast();
+                    
+                    console.log('Kết quả tìm kiếm ảnh: ở đâu', data);
+                    
+                })
+                .catch(error => {
+                    loadingToast.hideToast();
+                    console.error('Lỗi tìm kiếm hình ảnh:', error);
+                    alert("Có lỗi xảy ra khi tìm kiếm hình ảnh, vui lòng thử lại!");
+                });
+            }
+        
+            // Xử lý tìm kiếm văn bản
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRFTOKEN': localStorage.getItem('csrftoken'),
+                },
+                body: JSON.stringify({
+                    query: query,
+                    k: 5
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingToast.hideToast();
+                const wrapPost = document.querySelector(".wrap-post");
+
+                wrapPost.innerHTML = ""; // Xóa nội dung cũ trước khi thêm mới
+
+
+                if(data?.results < 1) {
+                    const wrapPost = document.querySelector(".wrap-post");
+                    wrapPost.innerHTML = "<img src='/static/default/no_folder.png' alt='MORI' class='img-fluid'>";
+                    return;
+                }
+
+                data?.results?.forEach(photo => {
+                    const postEl = document.createElement("div");
+                    postEl.classList.add("post");
+                    postEl.innerHTML = `
+                        <div class="post-card" photo-id="${photo.id_photo}">
+                            <div class="post-header" photo-id="${photo.id_photo}">
+                                <img src="${photo.user.avatar || '/store/avatar/default_image/default.jpg'}" alt="User">
+                                <div class="post-info">
+                                    <h6 class="mb-0">${photo.user.name}</h6>
+                                    <small>${new Date(photo.created_at).toLocaleString()}</small>
+                                </div>
+                            </div>
+                            <p class="post-description">${photo.description || "Không có mô tả."}</p>
+                            <img src="${photo.photo || '{% static "default/no_image.png" %}'}" 
+                                 alt="Design" class="photo-image" style="cursor: pointer;">
+                            {% comment %} <div class="post-actions">
+                                <div>
+                                    <span class="count-likes" style="cursor: pointer; color: black; margin-right: 5px;">${photo.like_count || 0}</span>
+                                    <i class="fas fa-heart"></i>
+                                </div>
+    
+                                <span class="count-comments" style="cursor: pointer; color: black; margin-right: 5px;">${photo.comments.length || 0} ${photo.comments.length > 1 ? "comments" : "comment" }</span>
+                            </div> {% endcomment %}
+                            <div class="post-comments">
+                                <div class="comments-list">
+                                    <!-- Vùng hiển thị comment -->
+                                </div>
+                                <!-- Nút xem thêm comment để riêng, luôn nằm dưới -->
+                                <a href="#" class="view-more-comments" style="display: none;">Xem thêm comment</a>
+    
+                                <div class="comment-form">
+                                    <div class="px-1 py-2">
+                                        <img class="img-chat" id="profile-avatar" src="${localStorage.getItem('avatar') || '/store/avatar/default_image/default.jpg'}" alt="User">
+                                    </div>
+                                    <input type="text" class="comment-input" placeholder="Nhập comment..." />
+                                    <button class="comment-submit">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+    
+    
+    
+    
+    
+    
+                    // Lấy vùng comments-list và nút view-more
+                    const commentsList = postEl.querySelector('.comments-list');
+                    const viewMoreBtn = postEl.querySelector('.view-more-comments');
+    
+                    // Render comment, ẩn comment vượt quá threshold
+                    if (photo.comments && photo.comments.length > 0) {
+                        photo.comments.forEach((comment, index) => {
+                            // Tạo phần tử comment
+                            const commentEl = document.createElement('div');
+                            commentEl.classList.add('comment');
+                            commentEl.style.display = 'flex';
+                            commentEl.style.alignItems = 'flex-start';
+    
+                            // Avatar
+                            const avatar = document.createElement('img');
+                            avatar.classList.add('img-chat-comment');
+                            avatar.src = comment.user?.avatar || '/store/avatar/default_image/default.jpg';
+                            avatar.alt = 'User';
+                            avatar.style.width = '20px';
+                            avatar.style.height = '20px';
+                            avatar.style.borderRadius = '50%';
+    
+                            // Nội dung bình luận
+                            const commentBody = document.createElement('div');
+                            commentBody.classList.add('comment-body');
+    
+                            // Tên người dùng
+                            const userName = document.createElement('h6');
+                            userName.textContent = comment.user?.name || 'Ẩn danh';
+                            userName.style.margin = 0;
+    
+                            // Nội dung
+                            const contentSpan = document.createElement('span');
+                            contentSpan.textContent = comment.content || '';
+                            contentSpan.style.display = 'block';
+                            contentSpan.style.margin = '2px 0';
+    
+                            // Thời gian
+                            const p = document.createElement('p');
+                            p.classList.add("comment-date");
+                            p.textContent = comment.created_at || 'Không rõ thời gian';
+                            p.style.fontSize = '12px';
+                            p.style.color = 'gray';
+                            p.style.margin = 0;
+    
+                            // Gắn các phần vào commentBody
+                            commentBody.appendChild(userName);
+                            commentBody.appendChild(contentSpan);
+                            commentBody.appendChild(p);
+    
+                            // Gắn avatar và nội dung vào comment
+                            commentEl.appendChild(avatar);
+                            commentEl.appendChild(commentBody);
+    
+                            // Ẩn nếu vượt quá threshold
+                            if (index >= threshold) {
+                                commentEl.style.display = 'none';
+                            }
+    
+                            // Thêm vào danh sách
+                            commentsList.appendChild(commentEl);
+                        });
+    
+                        // Nếu số comment vượt threshold thì hiển thị nút "Xem thêm"
+                        if (photo.comments.length > threshold) {
+                            viewMoreBtn.style.display = "flex";
+                        }
+                    }
+    
+                    // Xử lý click vào nút xem thêm comment
+                    viewMoreBtn.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const commentEls = commentsList.querySelectorAll(".comment");
+                        // Kiểm tra xem có comment nào đang ẩn không
+                        let hiddenExists = false;
+                        commentEls.forEach((el, idx) => {
+                            if (idx >= threshold && el.style.display === "none") {
+                                hiddenExists = true;
+                            }
+                        });
+    
+                        if (hiddenExists) {
+                            // Hiện tất cả comment sau threshold
+                            commentEls.forEach((el, idx) => {
+                                if (idx >= threshold) {
+                                    el.style.display = "flex";
+                                }
+                            });
+                            viewMoreBtn.textContent = "Ẩn bớt comment";
+                        } else {
+                            // Ẩn lại các comment sau threshold
+                            commentEls.forEach((el, idx) => {
+                                if (idx >= threshold) {
+                                    el.style.display = "none";
+                                }
+                            });
+                            viewMoreBtn.textContent = "Xem thêm comment";
+                        }
+                    });
+    
+                    // Sử dụng click event với logic double-click custom cho ảnh
+                    const imgEl = postEl.querySelector('.photo-image');
+                    imgEl.addEventListener("click", function (e) {
+                        if (!imgEl.dataset.lastClickTime) {
+                            imgEl.dataset.lastClickTime = Date.now();
+                        } else {
+                            const diff = Date.now() - parseInt(imgEl.dataset.lastClickTime);
+                            if (diff < 800) {
+                                createHeart(e, postEl);
+                                handleLike(photo, postEl);
+                                delete imgEl.dataset.lastClickTime;
+                            } else {
+                                imgEl.dataset.lastClickTime = Date.now();
+                            }
+                        }
+                    });
+    
+                    // Xử lý gửi comment mới: hỗ trợ ấn Enter và click nút gửi
+                    const commentInput = postEl.querySelector('.comment-input');
+                    const commentSubmit = postEl.querySelector('.comment-submit');
+    
+                    commentSubmit.addEventListener("click", async function () {
+                        const commentText = commentInput.value.trim();
+                        if (commentText !== "") {
+                            await submitComment(photo, commentText, postEl);
+                            commentInput.value = "";
+                        }
+                    });
+                    commentInput.addEventListener("keyup", async function(e) {
+                        if (e.key === "Enter") {
+                            const commentText = commentInput.value.trim();
+                            if (commentText !== "") {
+                                await submitComment(photo, commentText, postEl);
+                                commentInput.value = "";
+                            }
+                        }
+                    });
+    
+                    wrapPost.appendChild(postEl);
+                });
+            })
+            .catch(error => {
+                loadingToast.hideToast();
+                console.error('Lỗi tìm kiếm:', error);
+                {% comment %} alert("Có lỗi xảy ra khi tìm kiếm, vui lòng thử lại!"); {% endcomment %}
+            });
+
+            {% comment %} Kết thúc {% endcomment %}
+            return
+        }
+
+
+        if (!query && mode === "text") {
+            alert("Vui lòng nhập từ khóa để tìm kiếm!");
+            return;
+        }
+    
+        {% comment %} let apiEndpoint;
+        let body; {% endcomment %}
+    
+        // Hiển thị toast đang tìm kiếm
+        const loadingToast = Toastify({
+            text: "Đang tìm kiếm...",
+            duration: -1,
+            close: true,
+            gravity: "top",
+            position: 'right',
+            backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+        });
+        loadingToast.showToast();
+    
+        if (mode === "text") {
+            apiEndpoint = `/search/photos/user/?mode=text&query=${encodeURIComponent(query)}&k=5`;
+        } else {
+            apiEndpoint = '/search/photo/normal/';
+            body = JSON.stringify({ "search_text": query });
+    
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'X-CSRFTOKEN': localStorage.getItem('csrftoken'),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: body,
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingToast.hideToast(); // Ẩn toast khi xong
+    
+                Toastify({
+                    text: "Tìm kiếm hình ảnh thành công!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: 'right',
+                    backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+                }).showToast();
+    
+                console.log("data :", data[0])
+
+                localStorage.setItem('searchResults', JSON.stringify({
+                    results: data.map(item => ({
+                        ...item,
+                    }))
+                }));
+                window.location.href = `imgs?mode=image&query=${encodeURIComponent(query)}`;
+            })
+            .catch(error => {
+                loadingToast.hideToast();
+                console.error('Lỗi tìm kiếm hình ảnh:', error);
+                alert("Có lỗi xảy ra khi tìm kiếm hình ảnh, vui lòng thử lại!");
+            });
+    
+            return;
+        }
+    
+        // Xử lý tìm kiếm văn bản
+        fetch(apiEndpoint, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRFTOKEN': localStorage.getItem('csrftoken'),
+            },
+            body: JSON.stringify({
+                query: query,
+                k: 5
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadingToast.hideToast();
+    
+            
+    
+            localStorage.setItem('searchResults', JSON.stringify(data));
+            window.location.href = `imgs?mode=text&query=${encodeURIComponent(query)}`;
+
+            setTimeout(() => {
+                Toastify({
+                    text: "Tìm kiếm văn bản thành công!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: 'right',
+                    backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+                }).showToast();
+            }, 1000);
+        })
+        .catch(error => {
+            loadingToast.hideToast();
+            console.error('Lỗi tìm kiếm:', error);
+            alert("Có lỗi xảy ra khi tìm kiếm, vui lòng thử lại!");
+        });
+    }
+
+    function searchImg() {
+        const fileInput = document.getElementById('uploadFileSearch');
+        const file = fileInput.files[0]; // Get the first file selected
+    
+        if (!file) {
+            alert("Vui lòng chọn một ảnh!");
+            return;
+        }
+    
+        // Prepare the FormData object to send the file
+        const formData = new FormData();
+        formData.append('photo', file);
+    
+        // Hiển thị toast đang tìm kiếm ảnh
+        const searchingToast = Toastify({
+            text: "Đang tìm kiếm ảnh...",
+            duration: -1, // Giữ toast cho đến khi tắt bằng tay
+            close: true,
+            gravity: "top",
+            position: 'right',
+            backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+        });
+        searchingToast.showToast();
+    
+        // Gửi request
+        fetch('/search/photos/user/?mode=image&k=5', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`,
+                'X-CSRFTOKEN': localStorage.getItem('csrftoken'),
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            searchingToast.hideToast(); // Ẩn toast đang tải
+    
+            Toastify({
+                text: "Tìm kiếm thành công!",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: 'right',
+                backgroundColor: "linear-gradient(to right, #4A2E7E, #C4B5FD)",
+            }).showToast();
+    
+            console.log('Kết quả tìm kiếm ảnh:', data);
+            localStorage.setItem('searchResults', JSON.stringify(data));
+            window.location.href = `imgs?mode=image&query=${encodeURIComponent(file.name)}`;
+        })
+        .catch(error => {
+            searchingToast.hideToast();
+            console.error('Lỗi tìm kiếm ảnh:', error);
+            alert("Có lỗi xảy ra khi tìm kiếm ảnh, vui lòng thử lại!");
+        });
+    }
+
+    // Gán sự kiện Enter cho ô tìm kiếm
+    document.querySelector('#searchQuery').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            performSearch();
+        }
+    });
+
+    // Handle AI icon click to activate image search mode
+    document.querySelector('.search-icon-ai').addEventListener('click', () => {
+        const aiIcon = document.querySelector('.search-icon-ai');
+        aiIcon.classList.toggle('active_ai');
+    });
+
+    // Handle regular search icon click
+    document.querySelector('.search-icon-header').addEventListener('click', () => {
+        const headerIcon = document.querySelector('.search-icon-header');
+        headerIcon.classList.toggle('active_ai');
+    });
+
+    logout = (event) => {
+        localStorage.clear();
+        window.location.href = '/login';
+    }
+
+    // ----- THÊM MÃ JAVASCRIPT CHO DROPDOWN THÔNG BÁO -----
+
+    // Function để định dạng thời gian
+    function formatTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffSecs = Math.floor(diffMs / 1000);
+        
+        if (diffSecs < 60) {
+            return 'Vừa xong';
+        } else if (diffSecs < 3600) {
+            const mins = Math.floor(diffSecs / 60);
+            return `${mins} phút trước`;
+        } else if (diffSecs < 86400) {
+            const hours = Math.floor(diffSecs / 3600);
+            return `${hours} giờ trước`;
+        } else {
+            const days = Math.floor(diffSecs / 86400);
+            return `${days} ngày trước`;
+        }
+    }
+
+    // Function để fetch thông báo từ API
+    async function fetchNotifications() {
+        try {
+            const response = await fetch('/notifications/', {
+                method: 'GET',
+                headers: {
+                    'accept': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+            return [];
+        }
+    }
+
+    // Function để hiển thị thông báo
+    function renderNotifications(notifications) {
+        const notificationList = document.getElementById('notification-list');
+        
+        // Xóa nội dung hiện tại
+        notificationList.innerHTML = '';
+        
+        if (notifications.length === 0) {
+            {% comment %} const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'noti-empty';
+            emptyMessage.textContent = '';
+            notificationList.appendChild(emptyMessage); {% endcomment %}
+            return;
+        }
+        
+        // Thêm các thông báo vào danh sách
+        notifications.forEach(notification => {
+            const item = document.createElement('div');
+            item.className = 'noti-item';
+            
+            // Xử lý URL của avatar
+            const avatarUrl = notification.sender.avatar;
+            const baseUrl = 'http://127.0.0.1:8000';  // Điều chỉnh URL gốc nếu cần
+            const fullAvatarUrl = avatarUrl.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
+            
+            item.innerHTML = `
+                <img class="noti-avatar" src="${fullAvatarUrl}" alt="${notification.sender.name}">
+                <div class="noti-content">
+                    <div class="noti-message">${notification.message}</div>
+                    <div class="noti-time">${formatTime(notification.created_at)}</div>
+                </div>
+            `;
+            
+            // Thêm sự kiện click nếu cần
+            item.addEventListener('click', () => {
+                // Xử lý khi click vào thông báo, ví dụ: chuyển hướng đến trang chi tiết ảnh
+                if (notification.photo) {
+                    window.location.href = `/photo/${notification.photo.id_photo}`;
+                }
+            });
+            
+            notificationList.appendChild(item);
+        });
+    }
+
+    // Gọi hàm này khi trang được tải
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Tải thông báo khi hover vào biểu tượng thông báo
+        const notiContainer = document.querySelector('.noti-container');
+        const notiNumber = document.querySelector('.number-noti')        
+        // Biến để theo dõi việc đã tải thông báo hay chưa
+        let notificationsLoaded = false;
+        
+        const notifications = await fetchNotifications();
+        renderNotifications(notifications);
+        notiNumber.textContent = notifications.length;
+
+        notiContainer.addEventListener('mouseenter', async () => {
+            if (!notificationsLoaded) {
+                try {
+                    const notifications = await fetchNotifications();
+                    renderNotifications(notifications);
+                    notiNumber.textContent = notifications.length; // Cập nhật số lượng thông báo
+                    notificationsLoaded = true;
+                } catch (error) {
+                    console.error('Lỗi khi tải thông báo:', error);
+                    const notificationList = document.getElementById('notification-list');
+                    notificationList.innerHTML = '<div class="noti-empty">Lỗi khi tải thông báo</div>';
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,188 @@
+{% extends '../base/index.html' %}
+{% load static %}
+
+{% block title %}
+Trash - MORI
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<section class="bg-white home-component">
+    {% include '../header/index.html' %}
+
+    <div class="">
+        <div class="wrap-title mt-2">
+            <h3 class="category-title">Thùng rác</h3>
+        </div>
+
+        <!-- Tab Menu -->
+        {% comment %} <ul class="nav nav-tabs mt-3" id="trashTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-tab="tatca">Tất cả</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="hinhanh">Hình ảnh</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-tab="folder">Folder</a>
+            </li>
+        </ul> {% endcomment %}
+
+        <div class="alert alert-light mt-3" role="alert">
+            Mọi thiết kế bạn đã xóa sẽ nằm ở đây. Bạn sẽ có <strong>30 ngày</strong> để khôi phục trước khi chúng bị xóa tự động khỏi Thùng rác.
+            <a href="#" class="text-primary">Tìm hiểu thêm</a>
+        </div>
+
+        <!-- Danh sách ảnh đã xóa -->
+        <div class="design-section row mt-2 px-2" id="trashItems">
+            <div class="text-center">
+                <img src="{% static 'default/no_data.png' %}" alt="Không có dữ liệu" class="img-fluid">
+                <p class="text-muted">Đang tải dữ liệu...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchDeletedPhotos();
+    
+        const tabs = document.querySelectorAll('#trashTabs a');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (event) => {
+                event.preventDefault();
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+    
+                const selectedTab = tab.getAttribute('data-tab');
+                filterTrashItems(selectedTab);
+            });
+        });
+    });
+    
+    // 📌 Gọi API để lấy danh sách ảnh đã xóa
+    async function fetchDeletedPhotos() {
+        try {
+            const response = await fetch('/photo/delete/', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`
+                }
+            });
+    
+            if (!response.ok) throw new Error('Lỗi khi lấy dữ liệu từ API');
+    
+            const photos = await response.json();
+            renderTrashItems(photos);
+        } catch (error) {
+            console.error('Lỗi khi tải ảnh đã xóa:', error);
+        }
+    }
+    
+    // 📌 Hiển thị danh sách ảnh trong thùng rác
+    function renderTrashItems(photos) {
+        const trashContainer = document.getElementById('trashItems');
+        trashContainer.innerHTML = '';
+    
+        if (photos.length === 0) {
+            trashContainer.innerHTML = `
+                <div class="text-center">
+                    <img src="{% static '/default/no_folder.png' %}" alt="Không có dữ liệu" class="img-fluid">
+                    <p class="text-muted">Không có ảnh nào trong thùng rác.</p>
+                </div>
+            `;
+            return;
+        }
+    
+        photos.forEach(photo => {
+            const item = document.createElement('div');
+            item.className = 'col-md-3 col-sm-6 p-2 item-img';
+            item.dataset.type = 'hinhanh'; 
+            item.innerHTML = `
+                <div class="design-card">
+                    <img src="${photo.photo.startsWith('/') ? photo.photo : '/media/' + photo.photo}" alt="${photo.name || 'Deleted Photo'}">
+                    <div class="hover-overlay d-flex justify-content-center align-items-end">
+                        <button class="btn btn-restore" onclick="restorePhotos([${photo.id_photo}])" title="Khôi phục">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                        <button class="btn btn-delete" onclick="permanentlyDeletePhotos([${photo.id_photo}])" title="Xóa vĩnh viễn">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">${photo.name || 'Không có tên'}</h5>
+                    <p class="card-text">${photo.description || 'Không có mô tả'}</p>
+                </div>
+            `;
+            trashContainer.appendChild(item);
+        });
+    }
+    
+    // 📌 Khôi phục ảnh đã xóa (Hỗ trợ khôi phục nhiều ảnh cùng lúc)
+    async function restorePhotos(photoIds) {
+        try {
+            const response = await fetch('/trash/restores/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "photo_ids": photoIds })
+            });
+    
+            if (response.ok) {
+                fetchDeletedPhotos(); // Cập nhật giao diện
+            } else {
+                console.error('Lỗi khi khôi phục ảnh:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Lỗi khi khôi phục ảnh:', error);
+        }
+    }
+    
+    // 📌 Xóa vĩnh viễn ảnh khỏi thùng rác (Hỗ trợ xóa nhiều ảnh cùng lúc)
+    async function permanentlyDeletePhotos(photoIds) {
+        if (!confirm("Bạn có chắc chắn muốn xóa vĩnh viễn ảnh này không?")) return;
+    
+        try {
+            const response = await fetch('/trash/', {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Token ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "photo_ids": photoIds })
+            });
+    
+            if (response.ok) {
+                fetchDeletedPhotos(); // Cập nhật giao diện sau khi xóa thành công
+            } else {
+                console.error('Lỗi khi xóa ảnh:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Lỗi khi xóa ảnh:', error);
+        }
+    }
+    
+    // 📌 Lọc ảnh theo tab "Tất cả", "Hình ảnh", "Folder"
+    function filterTrashItems(selectedTab) {
+        const items = document.querySelectorAll('#trashItems .item-img');
+        items.forEach(item => {
+            const itemType = item.getAttribute('data-type');
+            item.style.display = (selectedTab === 'tatca' || itemType === selectedTab) ? 'block' : 'none';
+        });
+    }
+    
+</script>
+
+{% endblock %}

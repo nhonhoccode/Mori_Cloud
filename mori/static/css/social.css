@@ -1,0 +1,341 @@
+
+
+.post-actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 5px;
+  }
+  
+  .post-actions i {
+    width: 8px;
+    height: 8px;
+    cursor: pointer;
+    color: black;
+    font-size: 15px;
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  .post-actions span {
+    color: #666;
+    font-size: .8rem;
+  }
+  
+  
+  /* Phần bình luận của bài đăng */
+  .post-comments {
+    width: 100%;
+    border-top: 1px solid #eee;
+  }
+  
+  /* Định dạng cho comment con */
+  .child-comment {
+    margin-left: 20px;
+    font-style: italic;
+    color: #666;
+  }
+  
+  .post-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .post-info h6 {
+    color: #010101;
+    font-weight: 700;
+  }
+  
+  
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .img-chat-comment {
+    margin-top: 0 !important;
+  }
+  
+
+  .comment-body {
+    height: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* gap: 5px; */
+  }
+
+  .comment-body span {
+    margin: 0 10px !important;
+  }
+
+
+.comment-date {
+    font-size: 0.6rem !important;
+    color: #999;
+    margin-top: 2px;
+    flex: 1;
+    text-align: left;
+}
+
+  .comment-form {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .btn-reply {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .btn-delete {
+    background-color: transparent;
+    border: none;
+    color: #ff0000;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+  }
+
+  .comment {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dashed #ddd;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .comment:last-child {
+    border-bottom: none;
+  }
+  
+  .comment-input {
+    width: 100%;
+    padding: 4px 8px;
+    margin-top: 5px;
+    /* border: 1px solid #ccc; */
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin-right: 10px;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  
+  .comment-submit {
+    padding: 8px 12px;
+    border: none;
+    /* background-color: #3498db; */
+    background-color: transparent;
+    color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    margin-left: -2px;
+  }
+  
+  .comment-submit:hover {
+    background-color: #e0e3e4;
+  }
+  
+  
+  * {
+      box-sizing: border-box;
+  }
+  
+  body {
+      /* font-family: 'Original Surfer', cursive; */
+      background-color: rgb(177, 227, 242);
+      text-align: center;
+      overflow: hidden;
+      margin: 0;
+  }
+  
+  /* Đảm bảo container chứa ảnh được định vị tương đối để hiển thị trái tim */
+  .post-card {
+      position: relative;
+      width: 100%;
+  }
+  
+  /* CSS cho trái tim */
+  .fa-heart {
+      color: #ff007f;
+      transform: translate(-50%, -50%) scale(0);
+      animation: grow 0.6s linear forwards;
+  }
+  
+  
+  .view-more-comments {
+    display: block;       /* hoặc inline-block */
+    margin-top: 8px;      /* khoảng cách trên */
+    color: #007bff;       /* màu chữ tùy ý */
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .view-more-comments:hover {
+    text-decoration: none;
+  }
+  
+  
+  @keyframes grow {
+      to {
+          transform: translate(-50%, -50%) scale(13);
+          opacity: 0;
+      }
+  }
+  
+.post-description {
+    text-align: start;
+    padding: 10px 0;
+}
+
+.img-chat {
+    width: 20px !important;
+    height: 20px !important;
+    object-fit: cover;
+    border-radius: 50% !important;
+}
+  
+/* Add these styles to your social.css file */
+
+/* Comment styling */
+.comment {
+  display: flex;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.comment-body {
+  background-color: #f0f2f5;
+  border-radius: 18px;
+  padding: 8px 12px;
+  margin-left: 8px;
+  flex-wrap: wrap;
+  /* flex: 1; */
+}
+
+.comment-body h6 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-size: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.img-chat-comment {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment h6 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.comment span {
+  font-size: 14px;
+  margin: 4px 0 !important;
+  width: 100%;
+  display: flex !important;
+  justify-content: flex-start;
+}
+
+.comment-date {
+  font-size: 12px !important;
+  color: #65676B;
+  margin: 0;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.comment-actions a {
+  color: #65676B;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.comment-actions a:hover {
+  text-decoration: underline;
+}
+
+/* Reply form styling */
+.reply-form-container {
+  margin-top: 8px;
+  margin-left: 40px;
+}
+
+.reply-form {
+  display: flex;
+  align-items: flex-start; /* căn trái */
+  gap: 6px;
+  margin-top: 6px;
+  width: 100%;
+
+}
+
+.reply-form input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 0;
+  background: transparent !important;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none !important;
+  box-shadow: none !important;   /* Ngăn đổ bóng */
+}
+
+/* Ngăn hiệu ứng khi focus */
+.reply-form input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: #ccc !important; /* Không đổi màu khi focus */
+}
+.reply-form button {
+  padding: 5px 10px;
+  font-size: 13px;
+  background-color: transparent ;
+  margin-left: -10px;
+  color: #010101;
+  border: none !important;
+}
+
+.replies-container {
+  margin-left: 15px;
+  margin-top: 8px;
+}
+
+/* Nested replies should have smaller margins */
+.replies-container .comment {
+  margin-bottom: 6px;
+}
+
+.replies-container .img-chat-comment {
+  width: 24px;
+  height: 24px;
+}
+
+  /* Các style khác như cũ... */
+

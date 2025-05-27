@@ -1,0 +1,632 @@
+{% extends '../base/index.html' %}
+{% load static %}
+
+{% block title %}
+Dashboard - MORI
+{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+<section class="bg-white home-component">
+
+    {% include '../header/index.html' %}
+
+    <div class="top-bar-manage-img">
+        <img src="https://static.canva.com/web/images/65d94392e6ba3b43d6e95be0e65ffed9.jpg" alt="Logo">
+    </div>
+    <div class="">
+        <div class="icon-bar">
+            <button><a href=""><span>❤️</span></a>
+                <p>Yêu thích</p>
+            </button>
+            <button><a href="/page/social"><span>🌐</span></a>
+                <p>Cộng dồng</p>
+            </button>
+            <button class="upload" data-bs-toggle="modal" data-bs-target="#uploadModal"><span>☁</span>
+                <p>Tải lên</p>
+            </button>
+        </div>
+
+        <div class="action-buttons">
+            <button><a href="/page/social">🌈 Chia sẻ cảm xúc</a></button>
+            <button class="btn-active-ai-home">✨ Tìm kiếm với AI</button>
+            <button><a href="/page/manage-imgs">🦄 Quản lý thông minh</a></button>
+        </div>
+
+
+        <div class="wrap-title mt-2">
+            <h3 class="category-title">TỔNG QUAN</h3>
+        </div>
+
+        <div class="design-section row mt-2 px-2">
+            {% comment %} <div class="col-xl-3 col-md-4 col-sm-6 p-2 item-img">
+                <div class="design-card">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVhsoYsUszzdWvBzAaK8kMYg1oqbjTnR-ZdQ&s"
+                        alt="Design">
+                    <div class="hover-overlay d-flex justify-content-center align-items-end">
+                        <button class="btn btn-like">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                        <button class="btn btn-globe">
+                            <i class="fas fa-globe"></i>
+                        </button>
+                        <button class="btn btn-folder">
+                            <i class="fas fa-folder-open"></i>
+                        </button>
+                        <button class="btn btn-delete">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Breast Cancer TNT-2024</h5>
+                    <p class="card-text">Bài thuyết trình</p>
+                </div>
+            </div> {% endcomment %}
+        </div>
+
+        <!-- Modal Hiển Thị Ảnh -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img id="enlargedImage" src="" alt="Enlarged Image" class="img-fluid w-100">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="default-img-not-data row mt-2 px-2 col-12 text-center">
+            <img src="{% static 'default/no_folder.png' %}" alt="MORI" class="img-fluid">
+        </div>
+
+        <div class="modal fade" id="folderModal" tabindex="-1" aria-labelledby="folderModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="folderModalLabel">Chọn Folder</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row" id="folderGrid">
+                                <!-- Các folder sẽ được render theo dạng lưới -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="selectFolderBtn">Đồng ý</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="editInfoModal" tabindex="-1" aria-labelledby="editInfoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editInfoModalLabel" style="color: black !important;">Chỉnh sửa thông tin</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editInfoForm">
+                            <div class="mb-1">
+                                <label for="inputName" class="form-label" style="color: black !important;">Name</label>
+                                <input type="text" class="form-control" id="inputName" placeholder="Nhập tên">
+                            </div>
+                            <div class="mb-1">
+                                <label for="inputCaption" class="form-label" style="color: black !important;">Caption</label>
+                                <input type="text" class="form-control" id="inputCaption" placeholder="Nhập caption">
+                            </div>
+                            <div class="mb-1">
+                                <label for="inputDescription" class="form-label" style="color: black !important;">Description</label>
+                                <textarea class="form-control" id="inputDescription" rows="3"
+                                    placeholder="Nhập description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" id="saveChangesBtn">Lưu thay đổi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn_active_ai_home = document.querySelector('.btn-active-ai-home');
+        const aiIcon = document.querySelector('.search-icon-ai');
+        const input = document.querySelector('#searchQuery');
+
+
+        btn_active_ai_home.addEventListener('click', function () {
+            aiIcon.classList.toggle('active_ai');
+            input.focus();
+        });
+    });
+
+</script>
+
+
+<script>
+    const token = "{{ token|default:'' }}";
+    console.log("🔐 Token Knox: ", token);
+
+    if (token) {
+        console.log("✅ Token Knox: ", token);
+        localStorage.setItem('token', token);
+        console.log("✅ Token đã được lưu vào LocalStorage");
+    } else {
+        console.warn("⚠️ Không có token nào được tạo");
+    }
+
+    const headers = {
+        'Authorization': `Token ${localStorage.getItem('token')}`, // Replace with actual token
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        function fetchPhotos() {
+            fetch('/photo/', {
+                    method: 'GET',
+                    headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const designSection = document.querySelector('.design-section');
+                    const defaultImgSection = document.querySelector('.default-img-not-data');
+                    defaultImgSection.style.display = 'none';
+
+                    if (data.length === 0) {
+                        // No photos, show the default "no images" message
+                        defaultImgSection.style.display = 'block';
+                    } else {
+                        // Loop through the data and add images to the design section
+                        data.slice(0,8).forEach(photo => {
+                            const photoCard = document.createElement('div');
+                            photoCard.classList.add('col-xl-3', 'col-md-4', 'col-sm-6', 'p-2', 'item-img');
+
+                            photoCard.innerHTML = `
+                            <div class="design-card" 
+                                data-photo-id="${photo.id_photo}" 
+                                data-album-id="${photo.album}" 
+                                data-is-public="${photo.is_public}"
+                                data-is-favorite="${photo.is_favorited}"
+                            >
+                                <img src="${photo.photo}" alt="Design">
+                                <div class="hover-overlay d-flex justify-content-center align-items-end">
+                                    {% comment %} <button class="btn btn-like">
+                                        ${photo.is_favorited ? '<i class="fas fa-heart red-heart"></i>' : '<i class="far fa-heart"></i>'}
+                                    </button> {% endcomment %}
+                                    <button class="btn btn-globe">
+                                        ${photo.is_public ? '<i class="fas fa-globe"></i>' : '<i class="fas fa-lock"></i>'}
+                                    </button>
+                                    <button class="btn btn-folder">
+                                        <i class="fas fa-folder-open"></i>
+                                    </button>
+                                    <button class="btn btn-edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${photo.name || ''}</h5>
+                                <p class="card-text">${photo.caption || ''}</p>
+                            </div>
+                        `;
+
+                            designSection.appendChild(photoCard);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching photos:', error);
+                });
+        }
+        fetchPhotos();
+
+        function fetchFolders() {
+            fetch('/album', {
+                    method: 'GET',
+                    headers
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const albumContainer = document.getElementById("folderGrid");
+                    albumContainer.innerHTML = ''; // Xóa dữ liệu cũ trước khi render album mới
+
+                    {% comment %} console.log('Albums:', data); {% endcomment %}
+
+                    data.forEach(album => {
+                        const col = document.createElement('div');
+                        col.classList.add('col-4', 'mb-3');
+
+                        const card = document.createElement('div');
+                        card.classList.add('card', 'folder-card');
+                        card.style.cursor = 'pointer';
+                        card.setAttribute('data-id', album.id_album);
+                        card.innerHTML = `
+                        <div class="card-body text-center">
+                            <i class="fas fa-folder fa-3x"></i>
+                            <p class="mt-2">${album.title}</p>
+                        </div>
+                    `;
+
+                        // Event listener for folder card click using event delegation
+                        card.addEventListener('click', () => {
+                            document.querySelectorAll('.folder-card').forEach(item => item
+                                .classList
+                                .remove('active'));
+                            card.classList.add('active');
+                        });
+
+                        col.appendChild(card);
+                        folderGrid.appendChild(col);
+                    });
+                })
+                .catch(error => console.error("Error fetching albums:", error));
+        }
+        fetchFolders(); // Gọi API fetch album ngay khi tải trang
+
+
+        // Use Event Delegation to handle the folder button clicks
+        document.querySelector('.design-section').addEventListener('click', function (event) {
+            if (event.target.closest('.btn.btn-folder')) {
+                console.log("📁 Folder button clicked");
+
+                const folderButton = event.target.closest('.btn.btn-folder');
+                const photoCard = folderButton.closest('.design-card');
+                const photoId = photoCard.getAttribute('data-photo-id');
+
+                console.log("📸 Photo ID:", photoId);
+
+                if (!photoId) {
+                    console.error("❌ Không tìm thấy ID ảnh!");
+                    return;
+                }
+
+                // Hiển thị modal chọn folder
+                const folderModal = new bootstrap.Modal(document.getElementById('folderModal'));
+                folderModal.show();
+
+                // Xử lý sự kiện khi chọn folder và nhấn "Đồng ý"
+                document.getElementById('selectFolderBtn').addEventListener('click', function () {
+                    const selectedCard = document.querySelector('.folder-card.active');
+
+                    if (!selectedCard) {
+                        alert("⚠️ Vui lòng chọn một folder trước khi xác nhận!");
+                        return;
+                    }
+
+                    const folderId = selectedCard.getAttribute('data-id');
+                    const folderName = selectedCard.querySelector('p').textContent;
+
+                    console.log(`📁 Folder được chọn: ID ${folderId}, Tên: ${folderName}`);
+
+                    // Định dạng dữ liệu JSON để gửi đến API
+                    const requestData = [{
+                        "id_photo": parseInt(photoId, 10),
+                        "album": parseInt(folderId, 10)
+                    }];
+
+                    console.log("📡 Gửi request PUT:", requestData);
+
+                    // Gửi request PUT đến API
+                    fetch('/photo/info/', {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+                            },
+                            body: JSON.stringify(requestData)
+                        })
+                        .then(response => {
+                            console.log("📡 Server response status:", response.status);
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                return response.json().then(errData => {
+                                    throw new Error(errData.detail ||
+                                        "⚠️ Lỗi khi cập nhật album.");
+                                });
+                            }
+                        })
+                        .then(data => {
+                            console.log(
+                                `✅ Ảnh ID ${photoId} đã được cập nhật vào Album ID ${folderId}.`,
+                                data);
+                            folderModal.hide(); // Đóng modal sau khi thành công
+                            window.location.reload(); // Cập nhật giao diện
+                        })
+                        .catch(error => console.error("❌ Lỗi cập nhật album:", error));
+                }, {
+                    once: true
+                }); // `once: true` để tránh gắn nhiều sự kiện click
+            }
+
+            if (event.target.closest('.design-card img')) {
+                // Handle image click
+                const img = event.target.closest('.design-card img');
+                const imgSrc = img.getAttribute('src');
+                const photoId = img.closest('.design-card').getAttribute('data-photo-id');
+
+                // Update src for the enlarged image in modal
+                const enlargedImage = document.getElementById('enlargedImage');
+                enlargedImage.src = imgSrc;
+
+                // Show the modal using Bootstrap Modal
+                const imageModalEl = document.getElementById('imageModal');
+                const imageModal = new bootstrap.Modal(imageModalEl);
+                imageModal.show();
+            }
+
+            if (event.target.closest('.btn-delete')) {
+                const photoCard = event.target.closest('.design-card');
+                const cardBody = event.target.closest('.card-body');
+                const photoId = photoCard.getAttribute("data-photo-id");
+
+                if (!photoId) {
+                    console.error("Photo ID not found.");
+                    return;
+                }
+
+                // Xác nhận xóa trước khi gửi request
+                if (!confirm(`Bạn có chắc chắn muốn xóa ảnh ID ${photoId} không?`)) {
+                    return;
+                }
+
+                fetch(`/photo/delete/`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Token ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRFTOKEN': localStorage.getItem(
+                                'csrftoken') // Lưu ý: Cần đảm bảo CSRF token được lưu
+                        },
+                        body: JSON.stringify({
+                            "photos": [parseInt(photoId)] // Chuyển ID ảnh thành số nguyên
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                            console.log(`Photo with ID ${photoId} deleted successfully.`);
+                        } else {
+                            return response.json().then(errData => {
+                                throw new Error(errData.detail ||
+                                "Failed to delete photo.");
+                            });
+                        }
+                    })
+                    .catch(error => console.error("Error deleting photo:", error));
+            }
+
+            if (event.target.closest('.btn-like')) {
+                const photoCard = event.target.closest('.design-card');
+                const photoId = photoCard.getAttribute("data-photo-id");
+                const isFavorite = photoCard.getAttribute("data-is-favorite");
+
+                if (!photoId) {
+                    console.error("Photo ID not found.");
+                    return;
+                }
+
+                if (!isFavorite) {
+                    fetch(`/favorite/`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRFTOKEN': localStorage.getItem(
+                                    'csrftoken') // Cần đảm bảo CSRF token hợp lệ
+                            },
+                            body: JSON.stringify({
+                                "photos": [{
+                                    "id_photo": parseInt(
+                                    photoId), // Chuyển ID ảnh thành số nguyên
+                                    "note": "Favorite image" // Ghi chú tùy chọn
+                                }]
+                            })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log(`Photo with ID ${photoId} added to favorites.`);
+                                // Cập nhật UI: Đổi màu nút hoặc thêm hiệu ứng yêu thích
+                                event.target.classList.add(
+                                "favorited"); // Thêm class để thay đổi giao diện
+                            } else {
+                                return response.json().then(errData => {
+                                    throw new Error(errData.detail ||
+                                        "Failed to favorite photo.");
+                                });
+                            }
+                        })
+                        .catch(error => console.error("Error favoriting photo:", error));
+                } else {
+                    fetch(`/favorite/`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRFTOKEN': localStorage.getItem(
+                                    'csrftoken') // Cần đảm bảo CSRF token hợp lệ
+                            },
+                            body: JSON.stringify({
+                                "photos": [{
+                                    "id_photos": parseInt(
+                                    photoId), // Chuyển ID ảnh thành số nguyên
+                                }]
+                            })
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log(`Photo with ID ${photoId} removed from favorites.`);
+                                // Cập nhật UI: Đổi màu nút hoặc thêm hiệu ứng yêu thích
+                                event.target.classList.remove(
+                                "favorited"); // Xóa class để thay đổi giao diện
+                            } else {
+                                return response.json().then(errData => {
+                                    throw new Error(errData.detail ||
+                                        "Failed to unfavorite photo.");
+                                });
+                            }
+                        })
+                        .catch(error => console.error("Error unfavoriting photo:", error));
+                }
+            }
+
+            if (event.target.closest('.btn-globe')) {
+                const globeButton = event.target.closest('.btn-globe');
+                const photoCard = globeButton.closest('.design-card');
+
+                // Lấy ID ảnh và album từ thuộc tính data
+                const photoId = photoCard.getAttribute("data-photo-id");
+                const albumId = photoCard.getAttribute("data-album-id");
+                var isPublic = photoCard.getAttribute("data-is-public");
+
+                isPublic = isPublic === "true" ? false : true;
+
+                if (!photoId || !albumId) {
+                    console.error("Photo ID hoặc Album ID không tìm thấy.");
+                    return;
+                }
+
+                // Định dạng dữ liệu JSON để gửi tới API
+                const requestData = [{
+                        "id_photo": parseInt(photoId, 10),
+                        "album": parseInt(albumId, 10),
+                        "is_public": isPublic // Chuyển đổi giá trị boolean ngược
+                    } // Bạn có thể thay đổi nếu cần
+                ];
+
+                // Gửi request PUT tới API
+                fetch(`/photo/info/`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Token ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRFTOKEN': localStorage.getItem('csrftoken')
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.reload();
+                            return response.json();
+                        } else {
+                            return response.json().then(errData => {
+                                throw new Error(errData.detail ||
+                                    "Failed to update photo info.");
+                            });
+                        }
+                    })
+                    .then(data => {
+                        console.log(`Photo ID ${photoId} updated successfully in Album ${albumId}.`,
+                            data);
+                    })
+                    .catch(error => console.error("Error updating photo info:", error));
+            }
+
+            if (event.target.closest('.btn-edit')) {
+                const photoCard = event.target.closest('.design-card');
+                const photoId = photoCard.getAttribute("data-photo-id");
+                const albumId = photoCard.getAttribute("data-album-id");
+                
+                // Find the card title and text related to this specific photo
+                const cardContainer = photoCard.closest('.item-img');
+                const cardTitle = cardContainer.querySelector(".card-title");
+                const cardText = cardContainer.querySelector(".card-text");
+                
+                if (!photoId) {
+                    console.error("Photo ID not found.");
+                    return;
+                }
+            
+                // Lưu giá trị photoId, albumId vào modal để sử dụng sau
+                const editModal = document.getElementById("editInfoModal");
+                editModal.dataset.photoId = photoId;
+                editModal.dataset.albumId = albumId;
+            
+                // Get current data from the clicked card
+                document.getElementById("inputName").value = cardTitle ? cardTitle.textContent || "" : "";
+                document.getElementById("inputCaption").value = cardText ? cardText.textContent || "" : "";
+                document.getElementById("inputDescription").value = ""; // Reset description field
+            
+                // Hiển thị modal bằng Bootstrap Modal API
+                const bsModal = new bootstrap.Modal(editModal);
+                bsModal.show();
+            
+                // Đăng ký sự kiện cho nút "Lưu thay đổi" trong modal, chỉ thực hiện 1 lần
+                document.getElementById("saveChangesBtn").addEventListener("click", function handler() {
+                    const nameValue = document.getElementById("inputName").value;
+                    const captionValue = document.getElementById("inputCaption").value;
+                    const descriptionValue = document.getElementById("inputDescription").value;
+            
+                    // Tạo dữ liệu JSON theo định dạng yêu cầu
+                    const data = [{
+                        id_photo: parseInt(photoId, 10),
+                        album: parseInt(albumId, 10),
+                        ...(nameValue ? { name: nameValue } : {}),
+                        ...(captionValue ? { caption: captionValue } : {}),
+                        ...(descriptionValue ? { description: descriptionValue } : {})
+                    }];
+                    
+                    fetch("/photo/info/", {
+                            method: "PUT",
+                            headers: {
+                                "accept": "application/json",
+                                'Authorization': `Token ${localStorage.getItem('token')}`,
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then(json => {
+                            console.log("Success:", json);
+                            bsModal.hide();
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                        });
+            
+                    // Xóa sự kiện sau khi đã thực hiện để tránh lặp lại khi mở modal lần sau
+                    this.removeEventListener("click", handler);
+                }, { once: true });
+            }
+
+        });
+    });
+</script>
+
+{% endblock %}

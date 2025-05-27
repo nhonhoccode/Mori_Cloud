@@ -1,0 +1,151 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORI - Đăng nhập</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md p-8">
+        <div class="bg-white shadow-xl rounded-xl border border-gray-200 p-8">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <a href="/page/landing">MORI</a>
+                </h1>
+                <p class="text-gray-500">Đăng nhập vào tài khoản của bạn</p>
+            </div>
+
+            <form id="loginForm" class="space-y-4">
+                <!-- Email Input -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-envelope mr-2 text-gray-400"></i>Email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        placeholder="Nhập email của bạn" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                    >
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-lock mr-2 text-gray-400"></i>Mật khẩu
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Nhập mật khẩu của bạn" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                    >
+                </div>
+
+                <!-- Forgot Password and Register Links -->
+                <div class="flex justify-between items-center">
+                    <a href="/page/forgot-password" class="text-sm text-purple-600 hover:underline">
+                        Quên mật khẩu?
+                    </a>
+                    <a href="/page/register" class="text-sm text-purple-600 hover:underline">
+                        Tạo tài khoản
+                    </a>
+                </div>
+
+                <!-- Login Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700 transition duration-300 ease-in-out transform hover:scale-102 flex items-center justify-center space-x-2"
+                >
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Đăng nhập</span>
+                </button>
+
+                <!-- Divider -->
+                <div class="flex items-center my-4">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="px-4 text-gray-500 text-sm">Hoặc</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <!-- Social Login -->
+                <div class="flex justify-center">
+                    <a 
+                        href="{% provider_login_url 'google' %}" 
+                        class="w-full max-w-xs bg-white border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 flex items-center justify-center space-x-2"
+                    >
+                        <i class="fab fa-google text-red-500"></i>
+                        <span class="text-sm">Đăng nhập bằng Google</span>
+                    </a>
+                </div>
+            </form> 
+        </div>
+    </div>
+    <div id="errorMessage" class="text-red-500 mt-4 text-center hidden">
+        Đăng nhập thất bại! Vui lòng kiểm tra lại tài khoản và mật khẩu.
+    </div>
+    
+    
+    <script>
+    localStorage.setItem('sidebarActive', 'true'); // Đặt mặc định là true
+
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const payload = {
+            username: email,
+            password: password
+        };
+
+        try {
+            const response = await fetch('/user/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Nếu server trả về lỗi, hiển thị thông báo lỗi
+                document.getElementById('errorMessage').textContent = data.error || 'Đăng nhập thất bại';
+                document.getElementById('errorMessage').classList.remove('hidden');
+                return;
+            }
+
+            console.log('Đăng nhập thành công', data);
+
+            const token = data.token;
+            
+            if (token) {
+                console.log("✅ Token Knox: ", token);
+                localStorage.setItem('token', token);
+                console.log("✅ Token đã được lưu vào LocalStorage");
+            } else {
+                console.warn("⚠️ Không có token nào được tạo");
+            }
+
+            window.location.href = "/page/home";
+
+        } catch (error) {
+            console.error('Lỗi:', error);
+            document.getElementById('errorMessage').textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+            document.getElementById('errorMessage').classList.remove('hidden');
+        }
+    });
+</script>
+</body>
+</html>
