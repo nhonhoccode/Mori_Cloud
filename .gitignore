@@ -10,7 +10,7 @@ db.sqlite3
 migrations/
 *.pyc
 data_mori/
-# mori/.env
+mori/.env
 # Ignore all .env files
-# .env
-# */.env
+.env
+*/.env
