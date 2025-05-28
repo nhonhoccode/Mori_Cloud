@@ -1,10 +1,10 @@
 services:
 
-  web:  # Đổi từ mori_search thành web
+  web:  
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: web  # Đổi từ mori_search thành web
+    container_name: web  
     depends_on:
       - mori_db
     ports:
@@ -16,13 +16,14 @@ services:
     environment:
      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,demo.faster-united.info,web
      - DJANGO_CSRF_TRUSTED_ORIGINS=https://demo.faster-united.info,http://localhost:8000
+
   mori_db:
     image: postgres:17.0
     container_name: mori_db
     env_file:
       - .env
     volumes:
-      - db_mori:/var/lib/postgresql/data
+      # - db_mori:/var/lib/postgresql/data
       - ./db_mori/schema/mori.sql:/docker-entrypoint-initdb.d/mori.sql:ro
     restart: unless-stopped
     ports:
@@ -48,12 +49,14 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
-    command: tunnel --no-autoupdate run --token eyJhIjoiNWVhNTM5NjYwODdmNjcwMTVmNjYyMTkwZjgyMDE4NDIiLCJ0IjoiMjJiYTRkYTctNDYxMy00MDhkLTg1Y2UtZGY4MjZiYzU4MGRmIiwicyI6Ik5EVm1ZVEJpWkRJdFpHVmlZaTAwTkRNNUxUazROemN0TW1ZeFptRXpOelU1TXpZeSJ9
+    env_file:
+      - .env
+    command: tunnel --no-autoupdate run --token ${Token_cloud}
     networks:
       - tunnel-network
     restart: unless-stopped
     depends_on:
-      - web  # Đổi từ mori_search thành web
+      - web  
 
 volumes:
   db_mori:

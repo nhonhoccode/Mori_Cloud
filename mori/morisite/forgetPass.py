@@ -43,7 +43,8 @@ class ForgotPasswordView(APIView):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
 
-        reset_link = f"http://127.0.0.1:8000/reset/{uid}/{token}/"
+        # reset_link = f"http://127.0.0.1:8000/reset/{uid}/{token}/"
+        reset_link = f"https://demo.faster-united.info/reset/{uid}/{token}/"
 
         subject = "Đặt lại mật khẩu của bạn"
         message = f"""

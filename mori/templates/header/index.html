@@ -835,7 +835,8 @@
             
             // Xử lý URL của avatar
             const avatarUrl = notification.sender.avatar;
-            const baseUrl = 'http://127.0.0.1:8000';  // Điều chỉnh URL gốc nếu cần
+            // const baseUrl = 'http://127.0.0.1:8000';  // Điều chỉnh URL gốc nếu cần
+            const baseUrl = 'https://demo.faster-united.info';  // Điều chỉnh URL gốc nếu cần
             const fullAvatarUrl = avatarUrl.startsWith('http') ? avatarUrl : `${baseUrl}${avatarUrl}`;
             
             item.innerHTML = `

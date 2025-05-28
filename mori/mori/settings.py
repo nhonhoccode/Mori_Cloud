@@ -35,7 +35,9 @@ SECRET_KEY = "key_django"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://demo.faster-united.info/', 'demo.faster-united.info', 'localhost']
+# ALLOWED_HOSTS = ['https://demo.faster-united.info/', 'demo.faster-united.info', 'localhost']
+ALLOWED_HOSTS = ["demo.faster-united.info", "localhost", "127.0.0.1"]
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 # Application definition
 
@@ -232,7 +234,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
-
+SITE_URL = "https://demo.faster-united.info"
 email_host_noti = os.getenv("EMAIL_HOST_USER")  
 email_key_host_applicatoin = os.getenv("EMAIL_HOST_KEY_APPLICATON")
 
@@ -257,6 +259,9 @@ LOGIN_URL = "/page/login"
 
 SOCIALACCOUNT_LOGIN_ON_GET = True 
 APPEND_SLASH = True
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = client_id_app_google
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = client_secret_app_google
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://demo.faster-united.info/accounts/google/login/callback/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
